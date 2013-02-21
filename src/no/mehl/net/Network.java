@@ -40,8 +40,7 @@ public class Network {
 	
 	/** Returns a string from the server */
 	public String handle(String route) {
-		String response = null;
-		
+		StringBuilder builder = new StringBuilder();
 		try {
 		    // Send data
 		    URL url = new URL(URL + route);
@@ -49,23 +48,25 @@ public class Network {
 		    conn.setDoOutput(true);
 		    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 		    // Write parameters
+		    System.out.println("Connects to: " + URL + route);
 		    wr.write(encode(params));
 		    wr.flush();
 		    
 		    // Get the response
 		    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		    String line;
+		    String line = null;
 		    while ((line = rd.readLine()) != null) {
-		    	response = line;
+		    	builder.append(line);
 		    }
 		    wr.close();
 		    rd.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		cleanParams();		
-		System.out.println("Response: " + response);
-		return response;
+		cleanParams();
+		String built = builder.toString();
+		System.out.println("Response: " + built);
+		return built;
 	}
 	
 	/** Encodes and returns a string from the given hash map */
