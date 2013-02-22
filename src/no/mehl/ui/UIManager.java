@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /**
  * A singleton class for handling all loading of assets, such as fonts and textures.
@@ -79,6 +80,10 @@ public class UIManager extends AssetManager {
 	
 	public TextureRegion getRegion(String key) {
 		return uiSkin.getRegion(key);
+	}
+	
+	public Drawable getDrawable(String key) {
+		return this.uiSkin.get(key, Drawable.class);
 	}
 	
 	public boolean initializeAssets() {
