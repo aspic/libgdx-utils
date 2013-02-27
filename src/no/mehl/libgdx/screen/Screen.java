@@ -1,6 +1,6 @@
-package no.mehl.screen;
+package no.mehl.libgdx.screen;
 
-import no.mehl.core.GameListener;
+import no.mehl.libgdx.core.GameListener;
 
 /** Class structure for controlling how a {@link Screen} is used **/
 public abstract class Screen {

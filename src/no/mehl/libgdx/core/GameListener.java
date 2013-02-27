@@ -1,8 +1,8 @@
-package no.mehl.core;
+package no.mehl.libgdx.core;
 
 import javax.swing.UIManager;
 
-import no.mehl.screen.Screen;
+import no.mehl.libgdx.screen.Screen;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;

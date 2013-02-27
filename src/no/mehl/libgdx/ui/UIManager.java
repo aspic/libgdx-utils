@@ -1,4 +1,4 @@
-package no.mehl.ui;
+package no.mehl.libgdx.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;

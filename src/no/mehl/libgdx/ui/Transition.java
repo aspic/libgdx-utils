@@ -1,4 +1,4 @@
-package no.mehl.ui;
+package no.mehl.libgdx.ui;
 
 /**
  * Simple interface for generalising UI transitions.

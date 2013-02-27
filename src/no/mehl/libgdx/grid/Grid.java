@@ -1,4 +1,4 @@
-package no.mehl.grid;
+package no.mehl.libgdx.grid;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;

@@ -1,4 +1,4 @@
-package no.mehl.net;
+package no.mehl.libgdx.net;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
