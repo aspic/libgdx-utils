@@ -21,17 +21,14 @@ public abstract class GameListener implements ApplicationListener {
 		
 	}
 	
-	@Override
 	public void create() {
 		initializeUIManager();
 		this.currentScreen = getStartScreen();
 	}
 
-	@Override
 	public void resize(int width, int height) {
 	}
 
-	@Override
 	public void render() {
 		float delta = Gdx.graphics.getDeltaTime();
 		Gdx.gl.glClearColor(color[0], color[1], color[2], color[3]);
@@ -40,15 +37,14 @@ public abstract class GameListener implements ApplicationListener {
 		currentScreen.update(delta);
 	}
 
-	@Override
 	public void pause() {
+		
 	}
 
-	@Override
 	public void resume() {
+		
 	}
 
-	@Override
 	public void dispose() {
 	}
 	
