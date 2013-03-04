@@ -32,17 +32,15 @@ public abstract class GameListener implements ApplicationListener {
 	public void render() {
 		float delta = Gdx.graphics.getDeltaTime();
 		Gdx.gl.glClearColor(color[0], color[1], color[2], color[3]);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		currentScreen.render(delta);
 		currentScreen.update(delta);
 	}
 
 	public void pause() {
-		
 	}
 
 	public void resume() {
-		
 	}
 
 	public void dispose() {
