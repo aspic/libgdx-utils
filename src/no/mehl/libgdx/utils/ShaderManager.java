@@ -21,6 +21,8 @@ public class ShaderManager {
 	private Vector3 origin;
 	private Vector3 atPos = new Vector3();
 	private Vector3 toPos;
+	private static final float VIEWPORT_DEPTH = 30f;
+
 	float posZ;
 	
 	private ShaderManager() {
@@ -35,6 +37,7 @@ public class ShaderManager {
 	public void load(float aspect, float width, float height) {
 		
 		camera = new PerspectiveCamera(45, width * aspect, height);
+		camera.position.z = VIEWPORT_DEPTH;
 		origin = new Vector3(camera.position);
 	}
 	
