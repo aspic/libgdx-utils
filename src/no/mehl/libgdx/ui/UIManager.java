@@ -1,8 +1,10 @@
 package no.mehl.libgdx.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -14,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /**
@@ -34,16 +38,24 @@ public class UIManager extends AssetManager {
 	private String skinPath;
 	private TextureParameter params;
 	
+	private float scale;
+	
 	private UIManager() {
 		super();
 	}
 	
-	public void loadUI() {
+	public void loadUI(float screenHeight) {
 		this.load(atlasPath, TextureAtlas.class);
+		
+		this.scale = screenHeight/768; // Reference height
 	}
 	
 	private void initializeUI() {
 		uiSkin = new Skin(Gdx.files.internal(skinPath), this.get(atlasPath, TextureAtlas.class));
+		
+		BitmapFont font = uiSkin.getFont("DEFAULT");
+		font.setScale((15 * scale)/font.getCapHeight());
+		uiSkin.add("DEFAULT", font);
 	}
 	
 	public Button getButton() {
@@ -76,6 +88,14 @@ public class UIManager extends AssetManager {
 	
 	public Slider getSlider(String key, float min, float max, float step) {
 		return new Slider(min, max, step, false, uiSkin.get(key, SliderStyle.class));
+	}
+	
+	public TextField getTextField(String value) {
+		return getTextField(value, "DEFAULT");
+	}
+	
+	public TextField getTextField(String value, String key) {
+		return new TextField(value, uiSkin.get(key, TextFieldStyle.class));
 	}
 	
 	public TextureRegion getRegion(String key) {
