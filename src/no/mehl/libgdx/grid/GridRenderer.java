@@ -49,9 +49,9 @@ public class GridRenderer {
 						line.y2 = line.y;
 					}
 					renderer.line(camera.position.x
-							- (camera.viewportWidth / 2), line.y,
+							- (camera.viewportWidth / 2), line.y, 0.1f,
 							camera.position.x + (camera.viewportWidth / 2),
-							line.y2);
+							line.y2, 0.1f);
 				}
 			}
 
