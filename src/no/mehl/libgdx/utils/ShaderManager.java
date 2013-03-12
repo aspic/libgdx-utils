@@ -19,9 +19,7 @@ public class ShaderManager {
 	
 	// Camera controls
 	private Vector3 origin;
-	private Vector3 atPos = new Vector3();
-	private Vector3 toPos;
-	private static final float VIEWPORT_DEPTH = 30f;
+	private Vector3 toPos = new Vector3();
 
 	float posZ;
 	
@@ -34,11 +32,14 @@ public class ShaderManager {
 	 * @param width Viewport width
 	 * @param height Viewport height
 	 */
-	public void load(float aspect, float width, float height) {
+	public void load(float aspect, float width, float height, float depth) {
 		
 		camera = new PerspectiveCamera(45, width * aspect, height);
-		camera.position.z = VIEWPORT_DEPTH;
+		camera.position.z = depth;
+		posZ = depth;
 		origin = new Vector3(camera.position);
+		
+		System.out.println(depth);
 	}
 	
 	public ShaderProgram getShader(String key) {
@@ -62,28 +63,18 @@ public class ShaderManager {
 		return this.camera;
 	}
 	
-	public void translateXY(float x, float y) {
-		if(x == 0 && y == 0) toPos = new Vector3(origin);
-		else toPos = new Vector3(x, y, 0);
+	public void translate(float x, float y, float z) {
+		toPos.set(x, y, z);
 	}
 	
 	public void updateCamera(float delta) {
-		float diffX = (toPos.x - atPos.x)*delta;
-		float diffY = (toPos.y - atPos.y)*delta;
+		float diffX = (toPos.x - this.camera.position.x)*2*delta;
+		float diffY = (toPos.y - this.camera.position.y)*2*delta;
+		float diffZ = (toPos.z - this.camera.position.z)*delta;
+
+		this.camera.position.add(diffX, diffY, 0);
 		
-		float z = (posZ - origin.z)*delta;
-		origin.z += z;
-		atPos.add(diffX, diffY, 0);
-		
-		this.camera.position.set(atPos.x, atPos.y, origin.z);
-	}
-	
-	public void translateZ(float z) {
-		float diffZ = z - origin.z;
-		
-		if(Math.abs(diffZ) > 10) {
-			posZ += diffZ;
-		}
+		this.camera.update();
 	}
 	
 	public static ShaderManager getInstance() {
