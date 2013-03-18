@@ -33,13 +33,15 @@ public class ShaderManager {
 	 * @param height Viewport height
 	 */
 	public void load(float aspect, float width, float height, float depth) {
-		
+		load(aspect, width, height, depth, 200f);
+	}
+	
+	public void load(float aspect, float width, float height, float depth, float far) {
 		camera = new PerspectiveCamera(45, width * aspect, height);
+		camera.far = far;
 		camera.position.z = depth;
 		posZ = depth;
 		origin = new Vector3(camera.position);
-		
-		System.out.println(depth);
 	}
 	
 	public ShaderProgram getShader(String key) {
@@ -80,5 +82,14 @@ public class ShaderManager {
 	public static ShaderManager getInstance() {
 		return INSTANCE;
 	}
+
+	public void translateZ(float value) {
+		camera.position.z += value;
+		camera.update();
+	}
+
+//	public void translateZ(float zoomLvl) {
+////		this.camera.position.z += zoomLvl;
+//	}
 
 }
