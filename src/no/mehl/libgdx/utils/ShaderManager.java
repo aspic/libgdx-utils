@@ -66,15 +66,16 @@ public class ShaderManager {
 	}
 	
 	public void translate(float x, float y, float z) {
-		toPos.set(x, y, z);
+		toPos.x = x;
+		toPos.y = y;
 	}
 	
 	public void updateCamera(float delta) {
 		float diffX = (toPos.x - this.camera.position.x)*2*delta;
 		float diffY = (toPos.y - this.camera.position.y)*2*delta;
-		float diffZ = (toPos.z - this.camera.position.z)*delta;
+		float diffZ = (toPos.z - this.camera.position.z)*2*delta;
 
-		this.camera.position.add(diffX, diffY, 0);
+		this.camera.position.add(diffX, diffY, diffZ);
 		
 		this.camera.update();
 	}
@@ -83,13 +84,13 @@ public class ShaderManager {
 		return INSTANCE;
 	}
 
-	public void translateZ(float value) {
-		camera.position.z += value;
-		camera.update();
+	public void keepZDistance(float value) {
+		
+		float diff = camera.position.z - value;
+		if(diff < 15) {
+			toPos.z += .5f;
+		} else if(diff > 20) {
+			toPos.z -= .5f;
+		}
 	}
-
-//	public void translateZ(float zoomLvl) {
-////		this.camera.position.z += zoomLvl;
-//	}
-
 }
