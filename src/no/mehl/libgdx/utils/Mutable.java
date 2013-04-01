@@ -6,17 +6,30 @@ public class Mutable {
 	public static class Float {
 		private float value;
 		
+		public Float() {
+			this.value = 0;
+		}
+		
+		public Float(float value) {
+			this.value = value;
+		}
+		
 		public float get() {
 			return this.value;
 		}
 		
-		public float set(float value) {
-			return this.value = value;
+		public Mutable.Float set(float value) {
+			this.value = value;
+			return this;
 		}
 	}
 	
 	public static class Integer {
 		private int value;
+		
+		public Integer() {
+			this.value = 0;
+		}
 		
 		public int get() {
 			return this.value;
