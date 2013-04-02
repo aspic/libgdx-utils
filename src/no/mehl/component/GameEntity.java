@@ -2,7 +2,6 @@ package no.mehl.component;
 
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * A generic class defined by its components.
@@ -62,6 +61,7 @@ public class GameEntity {
 		this.userdata = userdata;
 	}
 	
+	/** Add a range of components */
 	public void attachComponents(Component... comps) {
 		components.addAll(comps);
 	}
@@ -83,12 +83,14 @@ public class GameEntity {
 		return this.alive;
 	}
 	
+	/** Will properly remove this {@link GameEntity}, after transmitting the change */
 	public void setAlive(boolean alive) {
 		this.alive = alive;
 	}
 	
-	public void setRemoved(boolean b) {
-		this.removed = b;
+	/** Will remove this {@link GameEntity} upon next {@link EntityManager} iteration */
+	public void setRemoved(boolean removed) {
+		this.removed = removed;
 	}
 	
 	public boolean isRemoved() {
@@ -207,6 +209,7 @@ public class GameEntity {
 	
 	/** Returns the first {@link Component} extending some class 
 	 * @return */
+	/** TODO: Used to access some "existing" components, should be used otherwise */
 	public <T> T getExtends(Class<T> clazz) {
 		for (Component c : components) {
 			if(c.componentExtends(clazz))  {
@@ -223,7 +226,7 @@ public class GameEntity {
 		return null;
 	}
 
-
+	/** Updates all components in this {@link GameEntity}, according to {@link EntitySnapshot} */
 	public void update(EntitySnapshot snapshot) {
 		if(snapshot.destroyed) setRemoved(true);
 		else if(snapshot.cps != null && snapshot.cps.size > 0 && snapshot.cps.get(0) != null) {
@@ -238,6 +241,8 @@ public class GameEntity {
 		}
 	}
 	
+	/** Clears existing components, and fills with new instances based on the {@link EntitySnapshot}. */
+	/** TODO: Call destroy and wait for next iteration? */
 	public void create(EntitySnapshot snapshot) {
 		components.clear();
 		for(Snapshot s : snapshot.cps) {
