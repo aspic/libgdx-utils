@@ -4,7 +4,7 @@ import no.mehl.libgdx.utils.Compare;
 
 import com.badlogic.gdx.graphics.Color;
 
-public abstract class Renderer extends Component<Renderer> {
+public abstract class Renderer extends Component {
 
 	// Fields
 	protected Snapshot snapshot = new Snapshot();

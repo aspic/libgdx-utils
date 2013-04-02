@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Array;
  * Main component class. Every component is described by an id and each {@link Component} needs to "implement" specific methods.
  * @author Kjetil Mehl <kjetil@mehl.no>
  */
-public abstract class Component <Base> {
+public abstract class Component {
 
 	private static Array<Class<? extends Component>> classes = new Array<Class<? extends Component>>();
 	private boolean changed;
@@ -68,7 +68,7 @@ public abstract class Component <Base> {
 	/** Returns the updated version for this component snapshot. */
 	public abstract Snapshot getSnapshot(boolean delta);
 	/** Returns the component updated with the provided snapshot. */
-	public abstract Base fill(Snapshot snapshot);
+	public abstract Component fill(Snapshot snapshot);
 	/** {@link Component} gets run in a server context */
 	public abstract void runServer(GameEntity entity, float delta);
 	/** {@link Component} gets run in a client context */

@@ -4,7 +4,7 @@ package no.mehl.component;
  * An abstract class defining contact responses for collisions.
  * @author Kjetil Mehl <kjetil@mehl.no>
  */
-public abstract class Contact extends Component<Contact> {
+public abstract class Contact extends Component {
 	
 	private Snapshot snapshot = new Snapshot();
 	private boolean destroyed;

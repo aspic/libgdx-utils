@@ -14,7 +14,7 @@ import no.mehl.libgdx.utils.Mutable;
  * This component definition is tightly coupled to the {@link Body} class in Box2D.
  * @author Kjetil Mehl <kjetil@mehl.no>
  */
-public abstract class Physics extends Component<Physics> {
+public abstract class Physics extends Component {
 
 	// Fields
 	protected Body body;

@@ -1,6 +1,6 @@
 package no.mehl.component;
 
-public abstract class Input extends Component<Input> {
+public abstract class Input extends Component {
 	
 	private Snapshot snapshot = new Snapshot();
 	
