@@ -19,17 +19,14 @@ public class EntityManager {
 	private Queue<GameEntity> entitiesToRemove = new LinkedList<GameEntity>();
 	private int entityId = 0;
 	
-	public EntityManager() {
-		
-	}
-	
-	/** Will run all components attached to a {@link GameEntity}. The meaning of «run» is decided by the components themselves */
+	/** Will run all components attached to a {@link GameEntity}. The meaning of «run» is decided by the components themselves. */
 	public void run(float step, boolean isServer) {
 		for (GameEntity entity : entities.values()) {
 			entity.run(step, isServer);
 		}
 	}
 	
+	/** Loops through removed entities, and properly destroys all attached {@link Component}s. */
 	public void checkRemoval(World world) {
 		for (GameEntity entity : entities.values()) {
 			if(!entity.isAlive() && !entity.isRemoved()) {
@@ -63,7 +60,7 @@ public class EntityManager {
 	}
 	
 	/** 
-	 * Polls the first element from entitiesToAdd, inserts
+	 * Polls the top element from entitiesToAdd, inserts
 	 * into the engine, and loads the entity.
 	 * @return The loaded {@link GameEntity}
 	 */
@@ -86,10 +83,12 @@ public class EntityManager {
 		return entity;
 	}
 	
+	/** Returns the {@link GameEntity} based on the id */
 	public GameEntity get(int id) {
 		return this.entities.get(id);
 	}
 	
+	/** Returns all normal entities (not recently added, or removed) */
 	public ObjectMap<Integer, GameEntity> getEntities() {
 		return this.entities;
 	}
