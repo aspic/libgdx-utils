@@ -21,14 +21,13 @@ public class GameEntity {
 	private boolean alive = true;
 	private boolean removed;
 	private int id;
-	private EntitySnapshot snapshot;
+	private EntitySnapshot snapshot = new EntitySnapshot();
 	
 	private String owner;
 
 	/** Creates an empty {@link GameObject}. */
-	public GameEntity(Component...comps) {
+	public GameEntity(Component... comps) {
 		components.addAll(comps);
-		snapshot = new EntitySnapshot();
 	}
 	
 	/** Creates a {@link GameEntity} based on a full {@link Snapshot} */
@@ -40,8 +39,10 @@ public class GameEntity {
 	/** Run all attached components */
 	public void run(float delta, boolean isServer) {
 		for (int i = 0; i < components.size; i++) {
-			if(!isServer) components.get(i).runClient(this, delta);
-			else components.get(i).runServer(this, delta);
+			Component component = components.get(i);
+			
+			if(!isServer) component.runClient(this, delta);
+			else component.runServer(this, delta);
 		}
 	}
 	
@@ -75,7 +76,7 @@ public class GameEntity {
 	}
 	
 	public String toString() {
-		return "\nGameEntity #" + id + ", owner: " + this.owner + "\n" + components.size + "\n";
+		return " GameEntity #" + id + ", owner: " + this.owner + "\n";
 	}
 	
 	/** Whether or not this {@link GameEntity} is alive */
@@ -147,7 +148,6 @@ public class GameEntity {
 			
 			// Loop through components, append delta
 			for (Component component : entity.getComponents()) {
-				int id = component.getId();
 				if(component.isChanged()) cps.add(component.getSnapshot(true));
 			}
 			
