@@ -12,7 +12,7 @@ public abstract class Component {
 	private boolean changed;
 	
 	/** This method registers all serializeable components. Must be loaded in each end point. */
-	public static void registerComponents(Class... comp) {
+	public static void registerComponents(Class<Component>... comp) {
 		for (int i = 0; i < comp.length; i++) {
 			classes.add(comp[i]);
 		}
@@ -77,5 +77,4 @@ public abstract class Component {
 	public abstract void load(GameEntity entity);
 	/** Method triggered in {@link Component} to tear it down */
 	public abstract void destroy(GameEntity entity);
-	
 }
