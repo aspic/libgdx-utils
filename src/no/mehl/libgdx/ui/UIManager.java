@@ -1,7 +1,6 @@
 package no.mehl.libgdx.ui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -91,11 +92,19 @@ public class UIManager extends AssetManager {
 	}
 	
 	public TextField getTextField(String value) {
-		return getTextField(value, "DEFAULT");
+		return getTextField(value, DEFAULT);
 	}
 	
 	public TextField getTextField(String value, String key) {
 		return new TextField(value, uiSkin.get(key, TextFieldStyle.class));
+	}
+	
+	public com.badlogic.gdx.scenes.scene2d.ui.List getList(String[] items) {
+		return getList(items, DEFAULT);
+	}
+	
+	public com.badlogic.gdx.scenes.scene2d.ui.List getList(String[] items, String key) {
+		return new List(items, uiSkin.get(key, ListStyle.class));
 	}
 	
 	public TextureRegion getRegion(String key) {
