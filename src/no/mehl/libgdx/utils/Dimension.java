@@ -1,14 +1,14 @@
-package no.mehl.component;
+package no.mehl.libgdx.utils;
 
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * A simple class describing dimension in the game world.
+ * A simple class describing dimension in game world.
  * @author Kjetil Mehl <kjetil@mehl.no>
  */
 public class Dimension {
 	
-	private float width, height, depth;
+	public float width, height, depth, radius;
 	private transient Vector2 center;
 	
 	public Dimension() {}
@@ -16,6 +16,7 @@ public class Dimension {
 	/** Constructor for the dimensions for a Circle. */
 	public Dimension(float radius) {
 		this(2*radius, 2*radius, 1*radius);
+		this.radius = radius;
 	}
 	
 	/** Constructor for a simple rectangle **/
