@@ -12,7 +12,7 @@ public abstract class Component {
 	private boolean changed;
 	
 	/** This method registers all serializeable components. Must be loaded in each end point. */
-	public static void registerComponents(Class<Component>... comp) {
+	public static void registerComponents(Class... comp) {
 		for (int i = 0; i < comp.length; i++) {
 			classes.add(comp[i]);
 		}
