@@ -4,7 +4,7 @@ package no.mehl.libgdx.utils;
 public class Mutable {
 	
 	public static class Float {
-		private float value;
+		public float value;
 		
 		public Float() {
 			this.value = 0;
@@ -25,7 +25,7 @@ public class Mutable {
 	}
 	
 	public static class Integer {
-		private int value;
+		public int value;
 		
 		public Integer() {
 			this.value = 0;
