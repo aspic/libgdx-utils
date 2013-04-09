@@ -1,9 +1,9 @@
 package no.mehl.component.physics;
 
 import no.mehl.component.BodyData;
-import no.mehl.component.Dimension;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
+import no.mehl.libgdx.utils.Dimension;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -72,5 +72,10 @@ public class MarblePhysics extends Physics {
 			def.linearDamping = 1f;
 		}
 		return def;
+	}
+	
+	public void doJump() {
+		this.velocity.z = 30f;
+		this.gravityZ = GRAV_Z;
 	}
 }

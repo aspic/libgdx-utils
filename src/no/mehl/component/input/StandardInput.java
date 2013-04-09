@@ -3,6 +3,7 @@ package no.mehl.component.input;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Input;
 import no.mehl.component.Physics;
+import no.mehl.component.physics.MarblePhysics;
 
 public class StandardInput extends Input {
 	
@@ -16,7 +17,7 @@ public class StandardInput extends Input {
 
 	@Override
 	public void doJump(GameEntity entity) {
-		Physics p = (Physics)entity.getExtends(Physics.class);
+		MarblePhysics p = (MarblePhysics)entity.getExtends(Physics.class);
 		if(p != null) p.doJump();
 	}
 
