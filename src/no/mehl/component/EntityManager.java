@@ -21,8 +21,8 @@ public class EntityManager {
 	
 	/** Will run all components attached to a {@link GameEntity}. The meaning of «run» is decided by the components themselves. */
 	public void run(float step, boolean isServer) {
-		for (GameEntity entity : entities.values()) {
-			entity.run(step, isServer);
+		for(Integer id : entities.keys()) {
+			entities.get(id).run(step, isServer);
 		}
 	}
 	
