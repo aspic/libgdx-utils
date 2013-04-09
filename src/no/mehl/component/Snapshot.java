@@ -1,5 +1,6 @@
 package no.mehl.component;
 
+import no.mehl.libgdx.utils.Dimension;
 import no.mehl.libgdx.utils.Mutable;
 
 import com.badlogic.gdx.graphics.Color;

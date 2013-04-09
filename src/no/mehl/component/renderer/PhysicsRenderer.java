@@ -13,13 +13,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
-import no.mehl.component.Dimension;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Renderer;
 import no.mehl.component.physics.MarblePhysics;
 import no.mehl.component.physics.MoveableRectangle;
 import no.mehl.component.physics.StaticRectangle;
+import no.mehl.libgdx.utils.Dimension;
 import no.mehl.libgdx.utils.ShaderManager;
 
 public class PhysicsRenderer extends Renderer {

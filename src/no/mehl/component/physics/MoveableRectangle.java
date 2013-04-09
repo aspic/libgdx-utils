@@ -2,10 +2,12 @@ package no.mehl.component.physics;
 
 import no.mehl.component.BodyData;
 import no.mehl.component.Contact;
-import no.mehl.component.Dimension;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
+import no.mehl.component.Snapshot;
 import no.mehl.component.contact.DestroyContact;
+import no.mehl.libgdx.utils.Dimension;
+import no.mehl.libgdx.utils.Mutable;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -76,6 +78,24 @@ public class MoveableRectangle extends Physics {
 	private int turn(float diff) {
 		if(diff >= 10f || diff < 0) return -1;
 		return 1;
+	}
+	
+	@Override
+	public Snapshot get() {
+		snapshot.v3_2 = null;
+		return  super.get();
+	}
+	
+	@Override
+	public Snapshot getFull() {
+		snapshot.v3_2 = toPos;
+		return super.getFull();
+	}
+	
+	@Override
+	public Physics fill(Snapshot snapshot) {
+		if(snapshot.v3_2 != null) this.toPos = new Vector3(snapshot.v3_2);
+		return super.fill(snapshot);
 	}
 	
 	
