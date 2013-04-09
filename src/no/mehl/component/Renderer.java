@@ -12,14 +12,6 @@ public abstract class Renderer extends Component {
 	
 	protected Color color;
 	
-	@Override
-	public Renderer fill(Snapshot snapshot) {
-		this.color = snapshot.c_0;
-		
-		System.out.println("Fills: " + snapshot.c_0);
-		return this;
-	}
-	
 	/** Return the color for this {@link Renderer}. */
 	protected Color getColor() {
 		return this.color;
@@ -28,6 +20,13 @@ public abstract class Renderer extends Component {
 	public void setColor(Color color) {
 		this.color = color;
 		setChanged();
+	}
+	
+	@Override
+	public Renderer fill(Snapshot snapshot) {
+		this.color = snapshot.c_0;
+		
+		return this;
 	}
 	
 	public Snapshot getSnapshot(boolean delta) {
