@@ -1,6 +1,5 @@
 package no.mehl.component.physics;
 
-import no.mehl.component.BodyData;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.libgdx.utils.Dimension;
@@ -16,13 +15,14 @@ public class MarblePhysics extends Physics {
 
 	public MarblePhysics() {}
 	
-	public MarblePhysics(Vector2 position, Dimension dimension) {
-		this(new Vector3(position.x, position.y, 0), dimension);
+	public MarblePhysics(Userdata data, Vector2 position, Dimension dimension) {
+		this(data, new Vector3(position.x, position.y, 0), dimension);
 	}
 	
-	public MarblePhysics(Vector3 position, Dimension dim) {
+	public MarblePhysics(Userdata data, Vector3 position, Dimension dim) {
 		this.position = position;
 		this.dim = dim;
+		this.data = data;
 	}
 	
 	@Override
@@ -35,8 +35,13 @@ public class MarblePhysics extends Physics {
 		
 		Fixture fix = body.createFixture(s, 0.1f);
 		
-		fix.setUserData(((BodyData)entity.getUserdata()).setPhysics(this));
+		if(data != null) {
+			fix.setUserData(data.load(entity, this));
+		}
 		fix.setRestitution(1f);
+		s.dispose();
+		
+		getPosition();
 	}
 	
 	@Override
@@ -77,5 +82,10 @@ public class MarblePhysics extends Physics {
 	public void doJump() {
 		this.velocity.z = 30f;
 		this.gravityZ = GRAV_Z;
+	}
+
+	@Override
+	public void accelerate(float force) {
+		
 	}
 }
