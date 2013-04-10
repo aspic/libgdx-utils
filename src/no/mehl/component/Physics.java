@@ -4,10 +4,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import no.mehl.libgdx.ui.UIManager;
 import no.mehl.libgdx.utils.Compare;
+import no.mehl.libgdx.utils.Dimension;
 import no.mehl.libgdx.utils.Mutable;
 
 /**
@@ -18,20 +19,21 @@ public abstract class Physics extends Component {
 
 	// Fields
 	protected Body body;
-	protected Vector3 position = new Vector3();
+	protected Vector3 position;
 	protected Vector3 velocity = new Vector3();
 	protected Vector3 lastVel = new Vector3();
 	protected Vector3 lastPos = new Vector3();
 	protected Vector3 toPos;
+	protected Userdata data;
 	
 	protected Vector2 force = new Vector2();
 	
 	protected Dimension dim;
-	private Snapshot snapshot = new Snapshot();
-	private Snapshot dS = new Snapshot();
+	protected Snapshot snapshot = new Snapshot();
+	protected Snapshot dS = new Snapshot();
 	
 	protected float gravityZ = 0f;
-	protected static final float GRAV_Z = -40;
+	protected static final float GRAV_Z = -25;
 	
 	@Override
 	public void runServer(GameEntity entity, float delta) {
@@ -53,6 +55,12 @@ public abstract class Physics extends Component {
 	
 	/** Sets the direction for this shape **/
 	public abstract void applyForce(float forceX, float forceY);
+	public abstract void accelerate(float force);
+	
+	/** Applies angular impulse to body */
+	public void rotateBy(float rot) {
+		if(this.body != null) this.body.applyAngularImpulse(rot, true);
+	}
 	
 	/** Returns the current velocity for this component */
 	public Vector3 getVelocity() {
@@ -67,6 +75,8 @@ public abstract class Physics extends Component {
 	
 	/** Returns the current position for this component, or the initial position. **/
 	public Vector3 getPosition() {
+		if(this.position == null) this.position = new Vector3();
+		
 		return this.position.set(body.getPosition().x, body.getPosition().y, this.position.z);
 	}
 	
@@ -89,18 +99,14 @@ public abstract class Physics extends Component {
 	protected abstract BodyDef createBodyDef();
 	
 	/** Update the position and angle for this body */
-	private void updateTransform(Vector3 pos, float angle) {
-		if(this.body != null && updateTransform(this.body.getPosition().x, this.body.getPosition().y, position.z, pos.x, pos.y, pos.z)) {
+	public void updateTransform(Vector3 pos, float angle) {
+		if(this.position == null) this.position = new Vector3(pos);
+		
+		if(this.body != null) {
+			System.out.println("Updates: " + pos);
 			this.body.setTransform(pos.x, pos.y, angle);
 		}
-		this.position.set(pos);
-	}
-	
-	private boolean updateTransform(float x, float y, float z, float toX, float toY, float toZ) {
-		if(Math.abs(x - toX) > 1f) return true;
-		if(Math.abs(y - toY) > 1f) return true;
-		if(Math.abs(z - toZ) > 1f) return true;
-		return false;
+		this.position.z = pos.z;
 	}
 	
 	/** Update the velocity for this body */
@@ -160,8 +166,6 @@ public abstract class Physics extends Component {
 		if(snapshot.v3_1 != null) updateVelocity(snapshot.v3_1.x, snapshot.v3_1.y, snapshot.v3_1.z);
 		if(snapshot.v2_0 != null) updateForce(snapshot.v2_0.x, snapshot.v2_0.x);
 		if(snapshot.d_0 != null) setDimension(snapshot.d_0);
-//		if(snapshot.toX != 0 || snapshot.toY != 0 || snapshot.toZ != 0) toPos = new Vector3(snapshot.toX, snapshot.toY, snapshot.toZ);
-		
 		return this;
 	}
 	
@@ -182,11 +186,6 @@ public abstract class Physics extends Component {
 		return this.body;
 	}
 
-	public void doJump() {
-		this.velocity.z = 30f;
-		this.gravityZ = GRAV_Z;
-	}
-	
 	public void setGravityZ(float grav) {
 		this.gravityZ = grav;
 		if(grav == 0) this.velocity.z = 0;
@@ -194,5 +193,14 @@ public abstract class Physics extends Component {
 	
 	public void setPosZ(float z) {
 		this.position.z = z;
+	}
+	
+	public void setUserdata(Object object) {
+		if(this.body != null) this.body.setUserData(object);
+	}
+	
+	public interface Userdata {
+		public Userdata load(GameEntity entity);
+		public Userdata load(GameEntity entity, Physics physics);
 	}
 }
