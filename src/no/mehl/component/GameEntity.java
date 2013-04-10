@@ -26,6 +26,10 @@ public class GameEntity {
 	private String owner;
 
 	/** Creates an empty {@link GameObject}. */
+	public GameEntity() {
+	}
+	
+	
 	public GameEntity(Component... comps) {
 		components.addAll(comps);
 	}
@@ -106,12 +110,13 @@ public class GameEntity {
 		return this.id;
 	}
 	
-	/** Gets called after body has been removed */
-	public void destroy() {
+	/** Gets called after body has been removed, always returns null */
+	public GameEntity destroy() {
 		for (Component component : components) {
 			component.destroy(this);
 		}
 		this.snapshot = null;
+		return null;
 	}
 	
 	/** 
@@ -248,5 +253,13 @@ public class GameEntity {
 		for(Snapshot s : snapshot.cps) {
 			this.components.add((Component)Component.getComponent(s.id).fill(s));
 		}
+	}
+	public boolean owns(Class class1) {
+		for (Component c : components) {
+			if(c.componentExtends(class1)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
