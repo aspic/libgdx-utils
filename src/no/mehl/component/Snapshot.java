@@ -43,7 +43,7 @@ public class Snapshot {
 	public Snapshot() {}
 	
 	public Snapshot validate() {
-		if(f_0 != null || s_0 != null || v2_0 != null || v3_0 != null || c_0 != null || d_0 != null) return this;
+		if(f_0 != null || s_0 != null || v2_0 != null || (v3_0 != null && v3_0.len() > 0) || c_0 != null || d_0 != null) return this;
 		return null;
 	}
 
