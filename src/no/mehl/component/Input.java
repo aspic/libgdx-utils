@@ -4,10 +4,12 @@ public abstract class Input extends Component {
 	
 	private Snapshot snapshot = new Snapshot();
 	
-	/** Accelerates a player */
+	/** Accelerates an {@link GameEntity} */
 	public abstract void addForce(GameEntity entity, float acclX, float acclY);
-	/** Triggers jump for a player */
+	/** Triggers jump for an {@link GameEntity} */
 	public abstract void doJump(GameEntity entity);
+	
+	public abstract void control(IType direction);
 	
 	@Override
 	public void runServer(GameEntity entity, float delta) {
@@ -36,5 +38,9 @@ public abstract class Input extends Component {
 	@Override
 	public void destroy(GameEntity entity) {
 		
+	}
+	
+	public static enum IType {
+		LEFT, RIGHT, UP, DOWN, JUMP, ACTION;
 	}
 }
