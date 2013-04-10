@@ -17,8 +17,8 @@ import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Renderer;
 import no.mehl.component.physics.MarblePhysics;
-import no.mehl.component.physics.MoveableRectangle;
-import no.mehl.component.physics.StaticRectangle;
+import no.mehl.component.physics.MoveableQuad;
+import no.mehl.component.physics.StaticQuad;
 import no.mehl.libgdx.utils.Dimension;
 import no.mehl.libgdx.utils.ShaderManager;
 
@@ -51,7 +51,7 @@ public class PhysicsRenderer extends Renderer {
 			mesh.scale(dimension.getRadius(), dimension.getRadius(), dimension.getRadius());
 			rotate = true;
 		} 
-		else if(physics instanceof StaticRectangle || physics instanceof MoveableRectangle) {
+		else if(physics instanceof StaticQuad || physics instanceof MoveableQuad) {
 			StillModel model = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/beveled_box.obj"));
 			mesh = model.getSubMeshes()[0].getMesh();
 			int rnd = MathUtils.random(1);
