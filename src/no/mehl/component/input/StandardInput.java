@@ -25,4 +25,9 @@ public class StandardInput extends Input {
 	public void load(GameEntity entity) {
 		
 	}
+
+	@Override
+	public void control(IType direction) {
+		
+	}
 }
