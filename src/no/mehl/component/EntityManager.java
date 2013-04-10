@@ -45,6 +45,13 @@ public class EntityManager {
 		entitiesToAdd.add(entity);
 	}
 	
+	/** Convenient method for adding several of entities */
+	public void addEntities(GameEntity... entities) {
+		for (int i = 0; i < entities.length; i++) {
+			entitiesToAdd.add(entities[i]);
+		}
+	}
+	
 	/** Appends the {@link GameEntity} to the removal list */
 	private void queueForRemoval(GameEntity entity) {
 		entitiesToRemove.add(entity);
@@ -74,7 +81,7 @@ public class EntityManager {
 		} else {
 			entity.setId(entityId);
 		}
-		entity.attachUserdata(new BodyData(entityId));
+//		entity.attachUserdata(new BodyData());
 		entity.load(world);
 		entities.put(entityId, entity);
 		
@@ -95,5 +102,9 @@ public class EntityManager {
 
 	public int getWaiting() {
 		return entitiesToAdd.size();
+	}
+
+	public void clear() {
+		
 	}
 }
