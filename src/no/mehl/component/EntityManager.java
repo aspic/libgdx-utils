@@ -75,6 +75,7 @@ public class EntityManager {
 		if(entitiesToAdd.size() == 0) return null;
 		
 		GameEntity entity = entitiesToAdd.poll();
+		if(entity == null) return null;
 		
 		if(entity.getId() > entityId) {
 			entityId = entity.getId();
