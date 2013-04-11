@@ -1,5 +1,6 @@
 package no.mehl.component;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -65,16 +66,20 @@ public abstract class Component {
 		return clazz.isAssignableFrom(getClass());
 	}
 	
-	/** Returns the updated version for this component snapshot. */
-	public abstract Snapshot getSnapshot(boolean delta);
-	/** Returns the component updated with the provided snapshot. */
-	public abstract Component fill(Snapshot snapshot);
+	public void getGraphicalRepresentation(Table table, Object object) {
+		System.out.println("NO GRAPHICAL REP FOR " + getClass());
+	}
+	/** This method gets run on the game loop, to initialize a {@link Component} */
+	public abstract void load(GameEntity entity);
 	/** {@link Component} gets run in a server context */
 	public abstract void runServer(GameEntity entity, float delta);
 	/** {@link Component} gets run in a client context */
 	public abstract void runClient(GameEntity entity, float delta);
-	/** This method gets run on the game loop, to initialize a {@link Component} */
-	public abstract void load(GameEntity entity);
+	
+	/** Returns the updated version for this component snapshot. */
+	public abstract Snapshot getSnapshot(boolean delta);
+	/** Returns the component updated with the provided snapshot. */
+	public abstract Component fill(Snapshot snapshot);
 	/** Method triggered in {@link Component} to tear it down */
 	public abstract void destroy(GameEntity entity);
 }
