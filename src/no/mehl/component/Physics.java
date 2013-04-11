@@ -25,6 +25,7 @@ public abstract class Physics extends Component {
 	protected Vector3 lastPos = new Vector3();
 	protected Vector3 toPos;
 	protected Userdata data;
+	protected float angle;
 	
 	protected Vector2 force = new Vector2();
 	
@@ -46,7 +47,7 @@ public abstract class Physics extends Component {
 	}
 	
 	public float getAngle() {
-		return -1;
+		return angle;
 	}
 	
 	public String toString() {
@@ -76,8 +77,8 @@ public abstract class Physics extends Component {
 	/** Returns the current position for this component, or the initial position. **/
 	public Vector3 getPosition() {
 		if(this.position == null) this.position = new Vector3();
-		
-		return this.position.set(body.getPosition().x, body.getPosition().y, this.position.z);
+		 
+		return body != null ? this.position.set(body.getPosition().x, body.getPosition().y, this.position.z) : this.position;
 	}
 	
 	public void setDimension(Dimension dim) {
@@ -103,9 +104,9 @@ public abstract class Physics extends Component {
 		if(this.position == null) this.position = new Vector3(pos);
 		
 		if(this.body != null) {
-			System.out.println("Updates: " + pos);
 			this.body.setTransform(pos.x, pos.y, angle);
 		}
+		this.angle = angle;
 		this.position.z = pos.z;
 	}
 	
@@ -202,5 +203,10 @@ public abstract class Physics extends Component {
 	public interface Userdata {
 		public Userdata load(GameEntity entity);
 		public Userdata load(GameEntity entity, Physics physics);
+	}
+	
+	/** Load common data for bodies */
+	protected void loadBody() {
+		updateTransform(position, angle);
 	}
 }
