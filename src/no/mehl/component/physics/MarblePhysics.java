@@ -28,10 +28,13 @@ public class MarblePhysics extends Physics {
 	@Override
 	public void load(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
-
+		super.loadBody();
+		
+		
 		// Set shape and fixture
 		CircleShape s = new CircleShape();
 		s.setRadius(dim.getRadius());
+		
 		
 		Fixture fix = body.createFixture(s, 0.1f);
 		

@@ -35,6 +35,8 @@ public class MoveableQuad extends Physics {
 	@Override
 	public void load(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
+		super.loadBody();
+		
 		
 		// Update fixture
 		PolygonShape s = new PolygonShape();
