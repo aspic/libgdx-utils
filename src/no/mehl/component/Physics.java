@@ -50,7 +50,7 @@ public abstract class Physics extends Component {
 	}
 	
 	public String toString() {
-		return "	" + getClass().getSimpleName();
+		return getClass().getSimpleName();
 	}
 	
 	/** Sets the direction for this shape **/

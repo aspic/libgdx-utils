@@ -13,7 +13,7 @@ public abstract class Renderer extends Component {
 	protected Color color;
 	
 	/** Return the color for this {@link Renderer}. */
-	protected Color getColor() {
+	public Color getColor() {
 		return this.color;
 	}
 	
@@ -46,7 +46,7 @@ public abstract class Renderer extends Component {
 	}
 	
 	public String toString() {
-		return "	Renderer: " + getClass().getSimpleName() + " color: " + color;
+		return getClass().getSimpleName();
 	}
 	
 	@Override
