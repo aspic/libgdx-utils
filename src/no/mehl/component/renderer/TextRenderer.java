@@ -1,6 +1,7 @@
 package no.mehl.component.renderer;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
@@ -19,12 +20,29 @@ public class TextRenderer extends Renderer {
 	private BitmapFont font;
 	private Physics physics;
 	private SpriteBatch batch;
+	private Camera camera;
 	
-	public TextRenderer() {}
+	public TextRenderer() {
+		this("Test text!");
+	}
 	
 	public TextRenderer(String text) {
+		this(text, new Vector2());
+	}
+	
+	public TextRenderer(String text, Vector2 offset) {
 		this.text = text;
-		this.offset = new Vector2(1.5f, 1.5f);
+		this.offset = offset;
+	}
+	
+	@Override
+	public void load(GameEntity entity) {
+		physics = entity.getExtends(Physics.class);
+		font = new BitmapFont();
+		batch = ShaderManager.getInstance().getSpriteBatch();
+		camera = ShaderManager.getInstance().getCamera();
+		
+		if(color != null) font.setColor(color);
 	}
 
 	@Override
@@ -37,7 +55,7 @@ public class TextRenderer extends Renderer {
 		if(physics != null && text != null) {
 			Matrix4 projection = camera.combined.cpy();
 			
-			projection.translate(physics.getPosition().x - camera.viewportWidth*0.5f + offset.x, physics.getPosition().y - camera.viewportHeight*0.5f + offset.y, physics.getPosition().z);
+			projection.translate(physics.getPosition().x, physics.getPosition().y , physics.getPosition().z + 1f);
 			projection.scale(0.1f, 0.1f, 0.1f);
 			
 			batch.setProjectionMatrix(projection);
@@ -47,15 +65,12 @@ public class TextRenderer extends Renderer {
 		}
 	}
 	
-	Camera camera;
-	
 	@Override
-	public void load(GameEntity entity) {
-		physics = entity.getExtends(Physics.class);
-		font = new BitmapFont();
-		batch = new SpriteBatch();
-		camera = ShaderManager.getInstance().getCamera();
+	public void setColor(Color color) {
+		if(font != null) font.setColor(color);
+		super.setColor(color);
 	}
+	
 	
 	@Override
 	public Renderer fill(Snapshot snapshot) {
