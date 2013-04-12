@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import no.mehl.libgdx.ui.UIManager;
@@ -57,6 +58,8 @@ public abstract class Physics extends Component {
 	/** Sets the direction for this shape **/
 	public abstract void applyForce(float forceX, float forceY);
 	public abstract void accelerate(float force);
+	public abstract void updateFixture();
+	protected abstract BodyDef createBodyDef();
 	
 	/** Applies angular impulse to body */
 	public void rotateBy(float rot) {
@@ -65,7 +68,8 @@ public abstract class Physics extends Component {
 	
 	/** Returns the current velocity for this component */
 	public Vector3 getVelocity() {
-		return this.velocity.set(body.getLinearVelocity().x, body.getLinearVelocity().y, this.velocity.z);
+		if(this.velocity == null) this.velocity = new Vector3();
+		return body != null ? this.velocity.set(body.getLinearVelocity().x, body.getLinearVelocity().y, this.velocity.z) : this.velocity;
 	}
 	
 	public Vector2 getForce() {
@@ -82,7 +86,14 @@ public abstract class Physics extends Component {
 	}
 	
 	public void setDimension(Dimension dim) {
-		this.dim = dim;
+		this.dim = new Dimension(dim);
+			
+		if(this.body != null) {
+			for (int i = 0; i < body.getFixtureList().size(); i++) {
+				body.destroyFixture(body.getFixtureList().get(i));
+			}
+			updateFixture();
+		}
 	}
 	
 	public Dimension getDimension() {
@@ -97,17 +108,14 @@ public abstract class Physics extends Component {
 		return delta ? get() : getFull();
 	}
 	
-	protected abstract BodyDef createBodyDef();
-	
 	/** Update the position and angle for this body */
 	public void updateTransform(Vector3 pos, float angle) {
-		if(this.position == null) this.position = new Vector3(pos);
+		this.position = pos != null ?  new Vector3(pos) : new Vector3();
 		
 		if(this.body != null) {
-			this.body.setTransform(pos.x, pos.y, angle);
+			this.body.setTransform(position.x, position.y, angle);
 		}
 		this.angle = angle;
-		this.position.z = pos.z;
 	}
 	
 	/** Update the velocity for this body */
@@ -206,7 +214,9 @@ public abstract class Physics extends Component {
 	}
 	
 	/** Load common data for bodies */
-	protected void loadBody() {
+	protected void loadBody(GameEntity entity) {
+		if(data != null) body.setUserData(data.load(entity, this));
 		updateTransform(position, angle);
+		setDimension(dim);
 	}
 }
