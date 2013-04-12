@@ -16,9 +16,11 @@ import com.badlogic.gdx.math.Vector3;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Renderer;
+import no.mehl.component.Snapshot;
 import no.mehl.component.physics.MarblePhysics;
 import no.mehl.component.physics.MoveableQuad;
 import no.mehl.component.physics.StaticQuad;
+import no.mehl.component.physics.StaticRectangle;
 import no.mehl.libgdx.utils.Dimension;
 import no.mehl.libgdx.utils.ShaderManager;
 
@@ -28,7 +30,6 @@ public class PhysicsRenderer extends Renderer {
 	
 	private Texture texture;
 	private Physics physics;
-	private Dimension dimension;
 	private boolean follow;
 	
 	public PhysicsRenderer() {}
@@ -42,26 +43,22 @@ public class PhysicsRenderer extends Renderer {
 	@Override
 	public void load(GameEntity entity) {
 		physics = entity.getExtends(Physics.class);
-		dimension = physics.getDimension();
 		
 		if(physics instanceof MarblePhysics) {
 			StillModel model = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/jatteplanet.obj"));
 			mesh = model.getSubMeshes()[0].getMesh();
 			texture = new Texture(Gdx.files.internal("overlay/marble-normal.jpg"));
-			mesh.scale(dimension.getRadius(), dimension.getRadius(), dimension.getRadius());
 			rotate = true;
 		} 
-		else if(physics instanceof StaticQuad || physics instanceof MoveableQuad) {
+		else if(physics instanceof StaticQuad || physics instanceof MoveableQuad || physics instanceof StaticRectangle) {
 			StillModel model = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/beveled_box.obj"));
 			mesh = model.getSubMeshes()[0].getMesh();
 			int rnd = MathUtils.random(1);
-			texture = new Texture(Gdx.files.internal("overlay/metal-normal"+rnd+".jpg"));
-			mesh.scale(dimension.getWidth(), dimension.getHeight(), dimension.getDepth());
+			texture = new Texture(Gdx.files.internal("overlay/metal_normal.png"));
 		}
-		
 		if(color == null) setColor(Color.WHITE);
 		
-		shader = ShaderManager.getInstance().compileShader("normal", "shaders/normal.vert", "shaders/normal.frag");
+		shader = ShaderManager.getInstance().compileShader("normal", "shaders/normal2.vert", "shaders/normal2.frag");
 		shader.begin();
 		shader.setUniformi("u_normal", 0);
 		shader.end();
@@ -118,7 +115,9 @@ public class PhysicsRenderer extends Renderer {
 		}
 		
 		combined = camera.combined.cpy();
-		combined.translate(position.x - camera.viewportWidth*0.5f, position.y - camera.viewportHeight*0.5f, physics.getDimension().getDepth() * 0.5f + position.z);
+		combined.translate(position.x, position.y, physics.getDimension().getDepth() * 0.5f + position.z);
+		combined.rotate(surfaceNormal, physics.getAngle()*MathUtils.radDeg);
+		combined.scale(physics.getDimension().width, physics.getDimension().height, physics.getDimension().depth);
 		
 		combined.mul(matrix);
 		lightDir.set(initialLight);
@@ -131,7 +130,9 @@ public class PhysicsRenderer extends Renderer {
 		shader.begin();
 		shader.setUniformMatrix("u_MVMatrix", combined);
     	shader.setUniformf("u_lightDir", lightDir);
-    	if(color != null) shader.setUniformf("u_color", color);
+    	if(color != null) {
+    		shader.setUniformf("u_color", color);
+    	}
 		mesh.render(shader, GL20.GL_TRIANGLES);
 		shader.end();
 		Gdx.gl20.glDisable(GL20.GL_DEPTH_TEST);
