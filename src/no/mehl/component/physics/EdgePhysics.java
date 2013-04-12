@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class EdgePhysics extends Physics {
@@ -24,15 +23,7 @@ public class EdgePhysics extends Physics {
 	@Override
 	public void load(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
-		EdgeShape shape = new EdgeShape();
-		shape.set(new Vector2(position.x, position.y), new Vector2(position.x + dim.getWidth(), position.y + dim.getHeight()));
-		
-		Fixture fix = body.createFixture(shape, 1f);
-		if(data != null) {
-			fix.setUserData(data.load(entity, this));
-		}
-		
-		shape.dispose();
+		super.loadBody(entity);
 	}
 
 	@Override
@@ -52,5 +43,13 @@ public class EdgePhysics extends Physics {
 	public void applyForce(float forceX, float forceY) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void updateFixture() {
+		EdgeShape shape = new EdgeShape();
+		shape.set(new Vector2(position.x, position.y), new Vector2(position.x + dim.getWidth(), position.y + dim.getHeight()));
+		body.createFixture(shape, 1f);
+		shape.dispose();
 	}
 }

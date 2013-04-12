@@ -1,16 +1,13 @@
 package no.mehl.component.physics;
 
-import no.mehl.component.Contact;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
-import no.mehl.component.contact.DestroyContact;
 import no.mehl.libgdx.utils.Dimension;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class StaticRectangle extends Physics {
@@ -34,17 +31,7 @@ public class StaticRectangle extends Physics {
 	@Override
 	public void load(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
-		super.loadBody();
-		
-		// Update fixture
-		PolygonShape s = new PolygonShape();
-		s.setAsBox(dim.getWidth()*0.5f, dim.getHeight()*0.5f);
-		
-		Fixture fix = body.createFixture(s, 1f);
-		if(data != null) {
-			fix.setUserData(data.load(entity, this));
-		}
-		s.dispose();
+		super.loadBody(entity);
 		
 		getPosition();
 	}
@@ -67,5 +54,14 @@ public class StaticRectangle extends Physics {
 	@Override
 	public void accelerate(float force) {
 		
+	}
+
+	@Override
+	public void updateFixture() {
+		PolygonShape s = new PolygonShape();
+		s.setAsBox(dim.getWidth()*0.5f, dim.getHeight()*0.5f);
+		
+		body.createFixture(s, 1f);
+		s.dispose();
 	}
 }

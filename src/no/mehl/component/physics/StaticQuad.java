@@ -28,18 +28,9 @@ public class StaticQuad extends Physics {
 	@Override
 	public void load(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
-		super.loadBody();
+		super.loadBody(entity);
+		if(data != null) body.setUserData(data.load(entity, this));
 		
-		// Update fixture
-		PolygonShape s = new PolygonShape();
-		s.setAsBox(dim.getWidth()*0.5f, dim.getHeight()*0.5f);
-		
-		Fixture fix = body.createFixture(s, 1f);
-		if(data != null) {
-			fix.setUserData(data.load(entity, this));
-		}
-		
-		s.dispose();
 		getPosition();
 	}
 
@@ -61,5 +52,15 @@ public class StaticQuad extends Physics {
 	@Override
 	public void accelerate(float force) {
 		
+	}
+
+	@Override
+	public void updateFixture() {
+		// Update fixture
+		PolygonShape s = new PolygonShape();
+		s.setAsBox(dim.getWidth() * 0.5f, dim.getHeight() * 0.5f);
+
+		body.createFixture(s, 1f);
+		s.dispose();
 	}
 }

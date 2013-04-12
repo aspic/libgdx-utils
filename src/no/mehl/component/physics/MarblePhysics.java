@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Shape;
 
 public class MarblePhysics extends Physics {
 
@@ -28,22 +29,8 @@ public class MarblePhysics extends Physics {
 	@Override
 	public void load(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
-		super.loadBody();
-		
-		
+		super.loadBody(entity);
 		// Set shape and fixture
-		CircleShape s = new CircleShape();
-		s.setRadius(dim.getRadius());
-		
-		
-		Fixture fix = body.createFixture(s, 0.1f);
-		
-		if(data != null) {
-			fix.setUserData(data.load(entity, this));
-		}
-		fix.setRestitution(1f);
-		s.dispose();
-		
 		getPosition();
 	}
 	
@@ -90,5 +77,14 @@ public class MarblePhysics extends Physics {
 	@Override
 	public void accelerate(float force) {
 		
+	}
+	
+	@Override
+	public void updateFixture() {
+		CircleShape s = new CircleShape();
+		s.setRadius(dim.getRadius());
+		
+		body.createFixture(s, 1f);
+		s.dispose();
 	}
 }
