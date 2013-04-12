@@ -108,4 +108,11 @@ public class EntityManager {
 	public void clear() {
 		
 	}
+	
+	public void reload(GameEntity entity) {
+		GameEntity removed = entities.remove(entity.getId());
+		if(removed != null) {
+			addEntities(removed);
+		}
+	}
 }

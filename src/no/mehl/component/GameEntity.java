@@ -20,7 +20,7 @@ public class GameEntity {
 	// Fields
 	private boolean alive = true;
 	private boolean removed;
-	private int id;
+	private int id = -1;
 	private EntitySnapshot snapshot = new EntitySnapshot();
 	
 	private String owner;
@@ -44,6 +44,7 @@ public class GameEntity {
 	public void run(float delta, boolean isServer) {
 		for (int i = 0; i < components.size; i++) {
 			Component component = components.get(i);
+			if(!component.isInitialized()) component.initialize(this);
 			
 			if(!isServer) component.runClient(this, delta);
 			else component.runServer(this, delta);
@@ -56,9 +57,9 @@ public class GameEntity {
 	 */
 	public void load(World world) {
 		this.world = world;
-		for (int i = 0; i < components.size; i++) {
-			components.get(i).load(this);
-		}
+//		for (int i = 0; i < components.size; i++) {
+//			components.get(i).load(this);
+//		}
 	}
 	
 	/** Attach some userdata to this {@link GameEntity} */
@@ -88,7 +89,7 @@ public class GameEntity {
 		return this.alive;
 	}
 	
-	/** Will properly remove this {@link GameEntity}, after transmitting the change */
+	/** Will properly remove this {@link GameEntity}, after transmitting the change. */
 	public void setAlive(boolean alive) {
 		this.alive = alive;
 	}

@@ -11,6 +11,7 @@ public abstract class Component {
 
 	private static Array<Class<? extends Component>> classes = new Array<Class<? extends Component>>();
 	private boolean changed;
+	private boolean initialized;
 	
 	/** This method registers all serializeable components. Must be loaded in each end point. */
 	public static void registerComponents(Class... comp) {
@@ -69,8 +70,21 @@ public abstract class Component {
 	public void getGraphicalRepresentation(Table table, Object object) {
 		System.out.println("NO GRAPHICAL REP FOR " + getClass());
 	}
+	
+	public void initialize(GameEntity entity) {
+		load(entity);
+		initialized = true;
+	}
+	public boolean isInitialized() {
+		return this.initialized;
+	}
+	
+	public void setInitialized(boolean b) {
+		this.initialized = b;
+	}
+	
 	/** This method gets run on the game loop, to initialize a {@link Component} */
-	public abstract void load(GameEntity entity);
+	protected abstract void load(GameEntity entity);
 	/** {@link Component} gets run in a server context */
 	public abstract void runServer(GameEntity entity, float delta);
 	/** {@link Component} gets run in a client context */
