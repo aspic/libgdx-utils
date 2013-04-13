@@ -26,17 +26,12 @@ public class StaticQuad extends Physics {
 	}
 
 	@Override
-	public void load(GameEntity entity) {
+	public void loadClient(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
 		super.loadBody(entity);
 		if(data != null) body.setUserData(data.load(entity, this));
 		
 		getPosition();
-	}
-
-	@Override
-	public void applyForce(float forceX, float forceY) {
-		
 	}
 
 	@Override
@@ -47,11 +42,6 @@ public class StaticQuad extends Physics {
 			def.position.set(position.x, position.y);
 		}
 		return def;
-	}
-
-	@Override
-	public void accelerate(float force) {
-		
 	}
 
 	@Override

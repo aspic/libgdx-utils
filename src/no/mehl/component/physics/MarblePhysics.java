@@ -27,7 +27,7 @@ public class MarblePhysics extends Physics {
 	}
 	
 	@Override
-	public void load(GameEntity entity) {
+	public void loadClient(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
 		super.loadBody(entity);
 		// Set shape and fixture
@@ -51,14 +51,6 @@ public class MarblePhysics extends Physics {
 	}
 	
 	@Override
-	public void applyForce(float forceX, float forceY) {
-		if(this.body != null) {
-			this.force.set(forceX, forceY);
-			this.body.applyForceToCenter(forceX, forceY, true);
-		}
-	}
-
-	@Override
 	protected BodyDef createBodyDef() {
 		BodyDef def = new BodyDef();
 		def.type = BodyType.DynamicBody;
@@ -74,11 +66,6 @@ public class MarblePhysics extends Physics {
 		this.gravityZ = GRAV_Z;
 	}
 
-	@Override
-	public void accelerate(float force) {
-		
-	}
-	
 	@Override
 	public void updateFixture() {
 		CircleShape s = new CircleShape();

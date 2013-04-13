@@ -43,4 +43,9 @@ public abstract class Input extends Component {
 	public static enum IType {
 		LEFT, RIGHT, UP, DOWN, JUMP, ACTION;
 	}
+	
+	@Override
+	protected void loadServer(GameEntity entity) {
+		
+	}
 }

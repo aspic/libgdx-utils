@@ -21,7 +21,7 @@ public class EdgePhysics extends Physics {
 	}
 
 	@Override
-	public void load(GameEntity entity) {
+	public void loadClient(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
 		super.loadBody(entity);
 	}
@@ -31,18 +31,6 @@ public class EdgePhysics extends Physics {
 		BodyDef def = new BodyDef();
 		def.type = BodyType.StaticBody;
 		return def;
-	}
-
-	@Override
-	public void accelerate(float force) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void applyForce(float forceX, float forceY) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

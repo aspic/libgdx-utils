@@ -26,7 +26,6 @@ public abstract class Physics extends Component {
 	protected Vector3 lastPos = new Vector3();
 	protected Vector3 toPos;
 	protected Userdata data;
-	protected float angle;
 	
 	protected Vector2 force = new Vector2();
 	
@@ -38,8 +37,14 @@ public abstract class Physics extends Component {
 	protected static final float GRAV_Z = -25;
 	
 	@Override
+	protected void loadServer(GameEntity entity)  {
+		loadClient(entity);
+	}
+	
+	@Override
 	public void runServer(GameEntity entity, float delta) {
 		
+		setChanged();
 	}
 
 	@Override
@@ -47,17 +52,22 @@ public abstract class Physics extends Component {
 		
 	}
 	
+	/** Returns the angle of the body in radians */
 	public float getAngle() {
-		return angle;
+		if(body != null) return body.getAngle();
+		return 0;
 	}
 	
 	public String toString() {
 		return getClass().getSimpleName();
 	}
 	
+	public void applyForce(float forceX, float forceY) {
+		if(force == null) force = new Vector2();
+		body.applyForceToCenter(force.set(forceX, forceY), true);
+	}
+	
 	/** Sets the direction for this shape **/
-	public abstract void applyForce(float forceX, float forceY);
-	public abstract void accelerate(float force);
 	public abstract void updateFixture();
 	protected abstract BodyDef createBodyDef();
 	
@@ -81,7 +91,6 @@ public abstract class Physics extends Component {
 	/** Returns the current position for this component, or the initial position. **/
 	public Vector3 getPosition() {
 		if(this.position == null) this.position = new Vector3();
-		 
 		return body != null ? this.position.set(body.getPosition().x, body.getPosition().y, this.position.z) : this.position;
 	}
 	
@@ -115,7 +124,7 @@ public abstract class Physics extends Component {
 		if(this.body != null) {
 			this.body.setTransform(position.x, position.y, angle);
 		}
-		this.angle = angle;
+//		this.angle = angle;
 	}
 	
 	/** Update the velocity for this body */
@@ -216,7 +225,7 @@ public abstract class Physics extends Component {
 	/** Load common data for bodies */
 	protected void loadBody(GameEntity entity) {
 		if(data != null) body.setUserData(data.load(entity, this));
-		updateTransform(position, angle);
+		updateTransform(position, body.getAngle());
 		setDimension(dim);
 	}
 }

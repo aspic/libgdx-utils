@@ -16,12 +16,10 @@ import com.badlogic.gdx.math.Vector3;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Renderer;
-import no.mehl.component.Snapshot;
 import no.mehl.component.physics.MarblePhysics;
 import no.mehl.component.physics.MoveableQuad;
 import no.mehl.component.physics.StaticQuad;
 import no.mehl.component.physics.StaticRectangle;
-import no.mehl.libgdx.utils.Dimension;
 import no.mehl.libgdx.utils.ShaderManager;
 
 public class PhysicsRenderer extends Renderer {
@@ -31,6 +29,7 @@ public class PhysicsRenderer extends Renderer {
 	private Texture texture;
 	private Physics physics;
 	private boolean follow;
+	private ShaderProgram shader;
 	
 	public PhysicsRenderer() {}
 	
@@ -38,10 +37,8 @@ public class PhysicsRenderer extends Renderer {
 		setColor(color);
 	}
 	
-	private ShaderProgram shader;
-	
 	@Override
-	public void load(GameEntity entity) {
+	public void loadClient(GameEntity entity) {
 		physics = entity.getExtends(Physics.class);
 		
 		if(physics instanceof MarblePhysics) {
@@ -50,7 +47,7 @@ public class PhysicsRenderer extends Renderer {
 			texture = new Texture(Gdx.files.internal("overlay/marble-normal.jpg"));
 			rotate = true;
 		} 
-		else if(physics instanceof StaticQuad || physics instanceof MoveableQuad || physics instanceof StaticRectangle) {
+		else {
 			StillModel model = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/beveled_box.obj"));
 			mesh = model.getSubMeshes()[0].getMesh();
 			int rnd = MathUtils.random(1);
@@ -85,7 +82,7 @@ public class PhysicsRenderer extends Renderer {
 	
 	@Override
 	public void runServer(GameEntity entity, float delta) {
-		runClient(entity, delta);
+//		runClient(entity, delta);
 	}
 	
 	@Override
@@ -110,7 +107,7 @@ public class PhysicsRenderer extends Renderer {
 		}
 		
 		if(follow) {
-			ShaderManager.getInstance().translate(position.x - camera.viewportWidth*0.5f, position.y - camera.viewportHeight*0.5f, position.z + physics.getDimension().getDepth());
+			ShaderManager.getInstance().translate(position.x, position.y, position.z + physics.getDimension().depth);
 			ShaderManager.getInstance().keepZDistance(position.z);
 		}
 		

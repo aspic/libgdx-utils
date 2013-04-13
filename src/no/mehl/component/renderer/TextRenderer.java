@@ -36,7 +36,7 @@ public class TextRenderer extends Renderer {
 	}
 	
 	@Override
-	public void load(GameEntity entity) {
+	public void loadClient(GameEntity entity) {
 		physics = entity.getExtends(Physics.class);
 		font = new BitmapFont();
 		batch = ShaderManager.getInstance().getSpriteBatch();

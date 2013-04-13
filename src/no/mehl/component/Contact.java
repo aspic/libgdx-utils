@@ -54,7 +54,7 @@ public abstract class Contact extends Component {
 	}
 	
 	/** Load this component with reference to its entity. */
-	public void load(GameEntity entity) {
+	public void loadClient(GameEntity entity) {
 		this.entity = entity;
 	}
 
@@ -65,4 +65,9 @@ public abstract class Contact extends Component {
 	
 	/** Both responses of this collision impact. Will only be triggered if this contact has not been handled. */
 	public abstract void handle(Contact contact);
+	
+	@Override
+	protected void loadServer(GameEntity entity) {
+		
+	}
 }

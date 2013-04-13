@@ -52,6 +52,7 @@ public abstract class Component {
 	}
 	/** Returns the {@link Component} given the identificator */
 	public static Component getComponent(int id) {
+		System.out.println("Fetches component: " + id);
 		try {
 			return classes.get(id).newInstance();
 		} catch (InstantiationException e) {
@@ -71,10 +72,13 @@ public abstract class Component {
 		System.out.println("NO GRAPHICAL REP FOR " + getClass());
 	}
 	
-	public void initialize(GameEntity entity) {
-		load(entity);
+	public void initialize(GameEntity entity, boolean server) {
+		if(server) loadServer(entity);
+		else loadClient(entity);
+		
 		initialized = true;
 	}
+
 	public boolean isInitialized() {
 		return this.initialized;
 	}
@@ -84,7 +88,10 @@ public abstract class Component {
 	}
 	
 	/** This method gets run on the game loop, to initialize a {@link Component} */
-	protected abstract void load(GameEntity entity);
+	protected abstract void loadClient(GameEntity entity);
+	
+	protected abstract void loadServer(GameEntity entity);
+	
 	/** {@link Component} gets run in a server context */
 	public abstract void runServer(GameEntity entity, float delta);
 	/** {@link Component} gets run in a client context */
@@ -96,4 +103,8 @@ public abstract class Component {
 	public abstract Component fill(Snapshot snapshot);
 	/** Method triggered in {@link Component} to tear it down */
 	public abstract void destroy(GameEntity entity);
+	
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

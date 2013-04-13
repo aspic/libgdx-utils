@@ -1,20 +1,15 @@
 package no.mehl.component.physics;
 
-import no.mehl.component.Contact;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Snapshot;
-import no.mehl.component.contact.DestroyContact;
 import no.mehl.libgdx.utils.Dimension;
-import no.mehl.libgdx.utils.Mutable;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 
 public class MoveableQuad extends Physics {
 	
@@ -26,15 +21,14 @@ public class MoveableQuad extends Physics {
 	
 	public MoveableQuad(Userdata data, Vector3 position, Dimension dimension, Vector3 toPos) {
 		this.position = position;
-//		this.startPos = 
 		this.dim = dimension;
 		this.velocity = new Vector3(3f, 3f, 3f);
-		this.toPos = toPos;
+		this.toPos = (toPos == null ? position : toPos);
 		this.data = data;
 	}
 
 	@Override
-	public void load(GameEntity entity) {
+	public void loadClient(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
 		super.loadBody(entity);
 		
@@ -84,12 +78,6 @@ public class MoveableQuad extends Physics {
 		return super.fill(snapshot);
 	}
 	
-	
-	@Override
-	public void applyForce(float forceX, float forceY) {
-		
-	}
-
 	@Override
 	protected BodyDef createBodyDef() {
 		BodyDef def = new BodyDef();
@@ -98,11 +86,6 @@ public class MoveableQuad extends Physics {
 			def.position.set(position.x, position.y);
 		}
 		return def;
-	}
-
-	@Override
-	public void accelerate(float force) {
-		
 	}
 
 	@Override

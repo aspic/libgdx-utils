@@ -17,7 +17,9 @@ public class EntityManager {
 	private ObjectMap<Integer, GameEntity> entities = new ObjectMap<Integer, GameEntity>();
 	private Queue<GameEntity> entitiesToAdd = new LinkedList<GameEntity>();
 	private Queue<GameEntity> entitiesToRemove = new LinkedList<GameEntity>();
-	private int entityId = 0;
+	
+	private int entityId = START_ID;
+	public static final int START_ID = 0;
 	
 	/** Will run all components attached to a {@link GameEntity}. The meaning of «run» is decided by the components themselves. */
 	public void run(float step, boolean isServer) {
@@ -80,13 +82,13 @@ public class EntityManager {
 		if(entity.getId() > entityId) {
 			entityId = entity.getId();
 		} else {
-			entity.setId(entityId);
+			entity.setId(++entityId);
 		}
 //		entity.attachUserdata(new BodyData());
 		entity.load(world);
 		entities.put(entityId, entity);
 		
-		entityId++;
+//		entityId++;
 		
 		return entity;
 	}

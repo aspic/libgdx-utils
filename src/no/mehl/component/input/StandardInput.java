@@ -22,7 +22,7 @@ public class StandardInput extends Input {
 	}
 
 	@Override
-	public void load(GameEntity entity) {
+	public void loadClient(GameEntity entity) {
 		
 	}
 

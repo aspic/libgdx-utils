@@ -29,16 +29,11 @@ public class StaticRectangle extends Physics {
 	}
 
 	@Override
-	public void load(GameEntity entity) {
+	public void loadClient(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
 		super.loadBody(entity);
 		
 		getPosition();
-	}
-
-	@Override
-	public void applyForce(float forceX, float forceY) {
-		
 	}
 
 	@Override
@@ -49,11 +44,6 @@ public class StaticRectangle extends Physics {
 			def.position.set(position.x, position.y);
 		}
 		return def;
-	}
-
-	@Override
-	public void accelerate(float force) {
-		
 	}
 
 	@Override

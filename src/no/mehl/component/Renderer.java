@@ -51,5 +51,11 @@ public abstract class Renderer extends Component {
 	
 	@Override
 	public void destroy(GameEntity entity) {
+		
+	}
+	
+	@Override
+	protected void loadServer(GameEntity entity) {
+		System.out.println("Renderer loaded in server context");
 	}
 }

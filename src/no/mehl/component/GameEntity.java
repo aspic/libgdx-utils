@@ -20,7 +20,7 @@ public class GameEntity {
 	// Fields
 	private boolean alive = true;
 	private boolean removed;
-	private int id = -1;
+	private int id = EntityManager.START_ID;
 	private EntitySnapshot snapshot = new EntitySnapshot();
 	
 	private String owner;
@@ -44,7 +44,7 @@ public class GameEntity {
 	public void run(float delta, boolean isServer) {
 		for (int i = 0; i < components.size; i++) {
 			Component component = components.get(i);
-			if(!component.isInitialized()) component.initialize(this);
+			if(!component.isInitialized()) component.initialize(this, isServer);
 			
 			if(!isServer) component.runClient(this, delta);
 			else component.runServer(this, delta);
@@ -57,9 +57,6 @@ public class GameEntity {
 	 */
 	public void load(World world) {
 		this.world = world;
-//		for (int i = 0; i < components.size; i++) {
-//			components.get(i).load(this);
-//		}
 	}
 	
 	/** Attach some userdata to this {@link GameEntity} */
@@ -141,6 +138,7 @@ public class GameEntity {
 		public boolean full;
 		public boolean destroyed;
 		public transient boolean fullTransmitted = false; // We need to transmit full entity upon creation
+		private transient boolean changed;
 		
 		public Array<Snapshot> cps;
 		
@@ -150,17 +148,30 @@ public class GameEntity {
 		
 		/** Forces a delta update of this {@link EntitySnapshot} */
 		public EntitySnapshot getDelta(GameEntity entity) {
-			cps.clear();
-			
+			id = entity.getId();
 			// Loop through components, append delta
-			for (Component component : entity.getComponents()) {
-				if(component.isChanged()) cps.add(component.getSnapshot(true));
+			for (int i = 0; i < entity.getComponents().size; i++) {
+				
+				// Let component decide
+				if(!entity.getComponents().get(i).isChanged()) continue;
+				
+				// Changed component, extract delta values
+				Snapshot delta = entity.getComponents().get(i).getSnapshot(true);
+				if(delta != null) {
+					if(cps.get(i) == null) cps.set(i, delta);
+					else cps.get(i).set(delta);
+					changed = true;
+				}
+				
 			}
 			
 			destroyed = entity.isRemoved();
 			full = false;
 			owner = null;
 			
+			if(destroyed || full) return this;
+			else if(!changed) return null;
+			changed = false;
 			return this;
 		}
 		
@@ -180,12 +191,6 @@ public class GameEntity {
 			fullTransmitted = true;
 
 			return this;
-		}
-		
-		/** Indicates whether it's necessary to transmit update */
-		public boolean shouldTransmit() {
-			if(full || cps.size > 0 || destroyed) return true;
-			return false;
 		}
 		
 		public String toString() {
@@ -223,6 +228,16 @@ public class GameEntity {
 			}
 		}
 		return null;
+	}
+	
+	/** Method for swapping two components */
+	public void swapComponent(Component replacement, Class class1) {
+		Component predecessor = getExtends(class1);
+		if(predecessor != null) {
+			predecessor.destroy(this);
+			components.removeValue(predecessor, true);
+		}
+		attachComponent(replacement);
 	}
 	
 	public Component getComponent(int componentId) {
