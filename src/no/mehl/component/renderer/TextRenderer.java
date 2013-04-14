@@ -74,17 +74,22 @@ public class TextRenderer extends Renderer {
 	
 	@Override
 	public Renderer fill(Snapshot snapshot) {
-		if(snapshot.s_0 != null) text = snapshot.s_0;
+		if(snapshot.s_1 != null) text = snapshot.s_1;
 		if(snapshot.v2_0 != null) this.offset = snapshot.v2_0;
 		
 		return super.fill(snapshot);
 	}
 	
 	public Snapshot getSnapshot(boolean delta) {
-		this.snapshot.s_0 = text;
+		this.snapshot.s_1 = text;
 		this.snapshot.v2_0 = this.offset;
 		
 		return super.getSnapshot(delta);
+	}
+
+	@Override
+	public String[] getTextures() {
+		return null;
 	}
 
 }
