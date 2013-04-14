@@ -11,7 +11,8 @@ public abstract class Component {
 
 	private static Array<Class<? extends Component>> classes = new Array<Class<? extends Component>>();
 	private boolean changed;
-	private boolean initialized;
+	private boolean loadedClient;
+	private boolean loadedServer;
 	
 	/** This method registers all serializeable components. Must be loaded in each end point. */
 	public static void registerComponents(Class... comp) {
@@ -73,18 +74,14 @@ public abstract class Component {
 	}
 	
 	public void initialize(GameEntity entity, boolean server) {
-		if(server) loadServer(entity);
-		else loadClient(entity);
-		
-		initialized = true;
-	}
-
-	public boolean isInitialized() {
-		return this.initialized;
-	}
-	
-	public void setInitialized(boolean b) {
-		this.initialized = b;
+		if(!loadedServer && server) {
+			loadServer(entity);
+			loadedServer = true;
+		}
+		if(!loadedClient && !server) {
+			loadClient(entity);
+			loadedClient = true;
+		}
 	}
 	
 	/** This method gets run on the game loop, to initialize a {@link Component} */

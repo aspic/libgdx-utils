@@ -1,5 +1,7 @@
 package no.mehl.component;
 
+import no.mehl.component.EntityManager.Context;
+
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -41,14 +43,21 @@ public class GameEntity {
 	}
 	
 
-	/** Run all attached components */
-	public void run(float delta, boolean isServer) {
+	/** Run all attached components in a server context */
+	public void runServer(float delta) {
 		for (int i = 0; i < components.size; i++) {
 			Component component = components.get(i);
-			if(!component.isInitialized()) component.initialize(this, isServer);
-			
-			if(!isServer) component.runClient(this, delta);
-			else component.runServer(this, delta);
+			component.initialize(this, true);
+			component.runServer(this, delta);
+		}
+	}
+	
+	/** Run all attached components in a client context */
+	public void runClient(float delta) {
+		for (int i = 0; i < components.size; i++) {
+			Component component = components.get(i);
+			component.initialize(this, false);
+			component.runClient(this, delta);
 		}
 	}
 	

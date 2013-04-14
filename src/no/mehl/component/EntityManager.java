@@ -3,7 +3,11 @@ package no.mehl.component;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import no.mehl.component.EntityManager.Context;
+import no.mehl.component.GameEntity.EntitySnapshot;
+
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
 /**
@@ -22,19 +26,35 @@ public class EntityManager {
 	public static final int START_ID = 0;
 	
 	private ManagerListener listener;
+	private Context context;
 	
-	public EntityManager() {
-		this(null);
+	public EntityManager(Context context) {
+		this(null, context);
 	}
 	
-	public EntityManager(ManagerListener listener) {
+	public EntityManager(ManagerListener listener, Context context) {
 		this.listener = listener;
+		this.context = context;
 	}
 	
 	/** Will run all components attached to a {@link GameEntity}. The meaning of «run» is decided by the components themselves. */
-	public void run(float step, boolean isServer) {
-		for(Integer id : entities.keys()) {
-			entities.get(id).run(step, isServer);
+	public void run(float step) {
+		if(context == Context.SERVER) {
+			for(Integer id : entities.keys()) {
+				entities.get(id).runServer(step);
+			}
+		} 
+		else if(context == Context.CLIENT) {
+			for(Integer id : entities.keys()) {
+				entities.get(id).runClient(step);
+			}
+		} 
+		else if(context == Context.BOTH) {
+			for(Integer id : entities.keys()) {
+				GameEntity entity = entities.get(id);
+				entity.runServer(step);
+				entity.runClient(step);
+			}
 		}
 	}
 	
@@ -77,6 +97,23 @@ public class EntityManager {
 			entities.remove(removed.getId());
 		}
 	}
+
+	/** Retrieves full/delta snapshots, ready for serialization */
+	public Array<EntitySnapshot> getSnapshots(boolean delta) {
+		
+		if(entities == null || entities.size == 0) return null;
+		
+		Array<EntitySnapshot> snapshots = new Array<EntitySnapshot>();
+		
+		for (int i = 0; i < entities.size; i++) {
+			GameEntity e = entities.get(i);
+			if(e == null) continue;
+			
+			EntitySnapshot snapshot = e.getSnapshot(delta);
+			if(snapshot != null) snapshots.add(snapshot);
+		}
+		return snapshots;
+	}
 	
 	/** 
 	 * Polls the top element from entitiesToAdd, inserts
@@ -94,13 +131,10 @@ public class EntityManager {
 		} else {
 			entity.setId(++entityId);
 		}
-//		entity.attachUserdata(new BodyData());
 		entity.load(world, this);
 		entities.put(entityId, entity);
 		
 		if(listener != null) listener.loadedEntity(entity);
-		
-//		entityId++;
 		
 		return entity;
 	}
@@ -136,5 +170,18 @@ public class EntityManager {
 	
 	public interface ManagerListener {
 		public void loadedEntity(GameEntity entity);
+	}
+	
+	public Context getContext() {
+		return this.context;
+	}
+	
+	public void setContext(Context context) {
+		System.out.println("Set context: " +context);
+		this.context = context;
+	}
+	
+	public enum Context {
+		SERVER, CLIENT, BOTH;
 	}
 }
