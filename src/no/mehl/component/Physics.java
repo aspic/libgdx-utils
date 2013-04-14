@@ -4,10 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-import no.mehl.libgdx.ui.UIManager;
 import no.mehl.libgdx.utils.Compare;
 import no.mehl.libgdx.utils.Dimension;
 import no.mehl.libgdx.utils.Mutable;
@@ -25,6 +23,7 @@ public abstract class Physics extends Component {
 	protected Vector3 lastVel = new Vector3();
 	protected Vector3 lastPos = new Vector3();
 	protected Vector3 toPos;
+	protected float angle;
 	protected Userdata data;
 	
 	protected Vector2 force = new Vector2();
@@ -54,8 +53,10 @@ public abstract class Physics extends Component {
 	
 	/** Returns the angle of the body in radians */
 	public float getAngle() {
-		if(body != null) return body.getAngle();
-		return 0;
+		if(body != null) {
+			angle = body.getAngle();
+		}
+		return angle;
 	}
 	
 	public String toString() {
@@ -124,7 +125,7 @@ public abstract class Physics extends Component {
 		if(this.body != null) {
 			this.body.setTransform(position.x, position.y, angle);
 		}
-//		this.angle = angle;
+		this.angle = angle;
 	}
 	
 	/** Update the velocity for this body */
@@ -179,7 +180,7 @@ public abstract class Physics extends Component {
 	 * @return The updated {@link Component}.
 	 */
 	public Physics fill(Snapshot snapshot) {
-		float angle = snapshot.f_0 != null ? snapshot.f_0.get() : 0;
+		angle = snapshot.f_0 != null ? snapshot.f_0.get() : angle;
 		if(snapshot.v3_0 != null) updateTransform(snapshot.v3_0, angle);
 		if(snapshot.v3_1 != null) updateVelocity(snapshot.v3_1.x, snapshot.v3_1.y, snapshot.v3_1.z);
 		if(snapshot.v2_0 != null) updateForce(snapshot.v2_0.x, snapshot.v2_0.x);
@@ -220,12 +221,15 @@ public abstract class Physics extends Component {
 	public interface Userdata {
 		public Userdata load(GameEntity entity);
 		public Userdata load(GameEntity entity, Physics physics);
+		
+		public <T> T get(String key, Class<T> clazz);
+		public void put(String key, Object object);
 	}
 	
 	/** Load common data for bodies */
 	protected void loadBody(GameEntity entity) {
 		if(data != null) body.setUserData(data.load(entity, this));
-		updateTransform(position, body.getAngle());
+		updateTransform(position, angle);
 		setDimension(dim);
 	}
 }

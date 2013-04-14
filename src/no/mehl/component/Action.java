@@ -1,6 +1,8 @@
 package no.mehl.component;
 
 public abstract class Action extends Component {
+	
+	private Snapshot snapshot = new Snapshot();
 	/**
 	 * This method will execute the given {@link Action} (whatever that means).
 	 * Some actions do return a created game object, which then need to be inserted
@@ -14,22 +16,16 @@ public abstract class Action extends Component {
 	 * @return True if {@link Action} is cooling down, false otherwise.
 	 */
 	public abstract boolean isCoolingDown();
-	/**
-	 * Fetch the class name for this {@link Action}. 
-	 * @return The class name.
-	 */
-	public abstract String name();
 	
 	@Override
 	public Snapshot getSnapshot(boolean delta) {
-		// TODO Auto-generated method stub
-		return null;
+		if(!delta) snapshot.id = getId();
+		return snapshot;
 	}
 
 	@Override
 	public Component fill(Snapshot snapshot) {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 	
 	@Override

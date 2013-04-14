@@ -9,6 +9,8 @@ public abstract class Renderer extends Component {
 	// Fields
 	protected Snapshot snapshot = new Snapshot();
 	protected Snapshot dS = new Snapshot();
+	protected boolean follow;
+	protected String key;
 	
 	protected Color color;
 	
@@ -19,12 +21,14 @@ public abstract class Renderer extends Component {
 	
 	public void setColor(Color color) {
 		this.color = color;
+		
 		setChanged();
 	}
 	
 	@Override
 	public Renderer fill(Snapshot snapshot) {
 		this.color = snapshot.c_0;
+		this.key = snapshot.s_0;
 		
 		return this;
 	}
@@ -40,13 +44,10 @@ public abstract class Renderer extends Component {
 			snapshot.c_0 = Compare.compareColor(dS.c_0, getColor());
 		} else {
 			snapshot.c_0 = this.color;
+			snapshot.s_0 = this.key;
 		}
 		
 		return snapshot;
-	}
-	
-	public String toString() {
-		return getClass().getSimpleName();
 	}
 	
 	@Override
@@ -58,4 +59,12 @@ public abstract class Renderer extends Component {
 	protected void loadServer(GameEntity entity) {
 		System.out.println("Renderer loaded in server context");
 	}
+	
+	/** Will usually render this entity in the center of the camera */
+	public void setFollow(boolean follow) {
+		this.follow = follow;
+	}
+	
+	/** Returns a list of appropriate textures for this {@link Renderer} */
+	public abstract String[] getTextures();
 }
