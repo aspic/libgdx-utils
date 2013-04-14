@@ -11,6 +11,16 @@ public abstract class Contact extends Component {
 	private boolean handled;
 	protected GameEntity entity;
 	
+	/** Load this component with reference to its entity. */
+	public void loadClient(GameEntity entity) {
+		this.entity = entity;
+	}
+	
+	@Override
+	protected void loadServer(GameEntity entity) {
+		this.entity = entity;
+	}
+	
 	@Override
 	public void runServer(GameEntity entity, float delta) {
 		
@@ -53,11 +63,6 @@ public abstract class Contact extends Component {
 		return snapshot;
 	}
 	
-	/** Load this component with reference to its entity. */
-	public void loadClient(GameEntity entity) {
-		this.entity = entity;
-	}
-
 	@Override
 	public Contact fill(Snapshot snapshot) {
 		return this;
@@ -65,9 +70,4 @@ public abstract class Contact extends Component {
 	
 	/** Both responses of this collision impact. Will only be triggered if this contact has not been handled. */
 	public abstract void handle(Contact contact);
-	
-	@Override
-	protected void loadServer(GameEntity entity) {
-		
-	}
 }

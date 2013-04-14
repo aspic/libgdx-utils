@@ -34,6 +34,7 @@ public class ModelRenderer extends Renderer {
 	
 	public ModelRenderer(Color color) {
 		setColor(color);
+		this.key = getTextures()[0];
 	}
 	
 	@Override
@@ -71,18 +72,15 @@ public class ModelRenderer extends Renderer {
 	 * 
 	 * axis = n x d / length(d)
 	 */
-	private float angle = 0;
+	private float rotateAngle = 0;
 	private Matrix4 combined;
 	private boolean rotate;
 	
 	@Override
-	public void runServer(GameEntity entity, float delta) {
-//		runClient(entity, delta);
-	}
-	
-	@Override
 	public void runClient(GameEntity entity, float delta) {
+		
 		if(physics == null) return;
+		
 		
 		if(reload) {
 			loadClient(entity);
@@ -99,10 +97,10 @@ public class ModelRenderer extends Renderer {
 			float length = velocity.len();
 			
 			rotationAxis = surfaceNormal.cpy().crs(velocity.mul(1/length));
-			angle += length;
+			rotateAngle += length;
 			
 			Matrix4 temp = matrix.idt();
-			temp.rotate(rotationAxis, angle);
+			temp.rotate(rotationAxis, rotateAngle);
 			matrix.mul(temp);
 		}
 		
