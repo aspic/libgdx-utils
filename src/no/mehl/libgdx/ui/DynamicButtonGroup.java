@@ -151,5 +151,13 @@ public class DynamicButtonGroup {
 	public enum Type {
 		TOPDOWN, CIRCLE;
 	}
+	
+	public float getX() {
+		return this.startX;
+	}
+	
+	public float getY() {
+		return this.startY;
+	}
 
 }

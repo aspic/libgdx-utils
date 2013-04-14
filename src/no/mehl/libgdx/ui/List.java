@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Cullable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
@@ -187,7 +188,7 @@ public class List<T> extends Widget implements Cullable {
 			prefWidth = Math.max(bounds.width, prefWidth);
 		}
 		prefHeight = items.size * itemHeight;
-
+		fire(new ChangeListener.ChangeEvent());
 		invalidateHierarchy();
 	}
 
