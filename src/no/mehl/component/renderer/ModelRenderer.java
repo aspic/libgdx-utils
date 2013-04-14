@@ -16,24 +16,23 @@ import com.badlogic.gdx.math.Vector3;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Renderer;
+import no.mehl.component.Snapshot;
 import no.mehl.component.physics.MarblePhysics;
-import no.mehl.component.physics.MoveableQuad;
-import no.mehl.component.physics.StaticQuad;
-import no.mehl.component.physics.StaticRectangle;
 import no.mehl.libgdx.utils.ShaderManager;
 
-public class PhysicsRenderer extends Renderer {
+public class ModelRenderer extends Renderer {
 	
 	private Mesh mesh;
-	
 	private Texture texture;
 	private Physics physics;
-	private boolean follow;
 	private ShaderProgram shader;
 	
-	public PhysicsRenderer() {}
+	/** Renderer based on first available texture */
+	public ModelRenderer() {
+		this.key = getTextures()[0];
+	}
 	
-	public PhysicsRenderer(Color color) {
+	public ModelRenderer(Color color) {
 		setColor(color);
 	}
 	
@@ -44,14 +43,14 @@ public class PhysicsRenderer extends Renderer {
 		if(physics instanceof MarblePhysics) {
 			StillModel model = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/jatteplanet.obj"));
 			mesh = model.getSubMeshes()[0].getMesh();
-			texture = new Texture(Gdx.files.internal("overlay/marble-normal.jpg"));
+			texture = new Texture(Gdx.files.internal(key));
 			rotate = true;
 		} 
 		else {
 			StillModel model = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/beveled_box.obj"));
 			mesh = model.getSubMeshes()[0].getMesh();
 			int rnd = MathUtils.random(1);
-			texture = new Texture(Gdx.files.internal("overlay/metal_normal.png"));
+			texture = new Texture(Gdx.files.internal(key));
 		}
 		if(color == null) setColor(Color.WHITE);
 		
@@ -76,10 +75,6 @@ public class PhysicsRenderer extends Renderer {
 	private Matrix4 combined;
 	private boolean rotate;
 	
-	public void setCameraFollow(boolean follow)	 {
-		this.follow = follow;
-	}
-	
 	@Override
 	public void runServer(GameEntity entity, float delta) {
 //		runClient(entity, delta);
@@ -88,6 +83,11 @@ public class PhysicsRenderer extends Renderer {
 	@Override
 	public void runClient(GameEntity entity, float delta) {
 		if(physics == null) return;
+		
+		if(reload) {
+			loadClient(entity);
+			reload = false;
+		}
 		
 		Vector3 position = physics.getPosition();
 		
@@ -134,5 +134,26 @@ public class PhysicsRenderer extends Renderer {
 		shader.end();
 		Gdx.gl20.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
+	}
+	
+	boolean reload;
+	
+	@Override
+	public Renderer fill(Snapshot snapshot) {
+		// Reload texture
+		if((snapshot.s_0 != null && key != null) && !key.equals(snapshot.s_0)) {
+			reload = true;
+		}
+		
+		return super.fill(snapshot);
+	}
+
+	@Override
+	public String[] getTextures() {
+		return new String[]{
+				"overlay/marble-normal.jpg",
+				"overlay/metal_normal.png",
+				"overlay/ground_normal.png",
+		};
 	}
 }
