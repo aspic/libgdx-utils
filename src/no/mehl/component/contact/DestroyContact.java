@@ -3,7 +3,7 @@ package no.mehl.component.contact;
 import no.mehl.component.Component;
 import no.mehl.component.Contact;
 import no.mehl.component.GameEntity;
-import no.mehl.component.renderer.PhysicsRenderer;
+import no.mehl.component.renderer.ModelRenderer;
 
 import com.badlogic.gdx.graphics.Color;
 
@@ -16,7 +16,7 @@ public class DestroyContact extends Contact {
 	@Override
 	public void handle(Contact contact) {
 		if(contact instanceof StandardContact) {
-			PhysicsRenderer r = (PhysicsRenderer)entity.getComponent(Component.getComponentId(PhysicsRenderer.class));
+			ModelRenderer r = (ModelRenderer)entity.getComponent(Component.getComponentId(ModelRenderer.class));
 			if(r != null) {
 				r.setColor(Color.RED);
 			}
