@@ -21,6 +21,16 @@ public class EntityManager {
 	private int entityId = START_ID;
 	public static final int START_ID = 0;
 	
+	private ManagerListener listener;
+	
+	public EntityManager() {
+		this(null);
+	}
+	
+	public EntityManager(ManagerListener listener) {
+		this.listener = listener;
+	}
+	
 	/** Will run all components attached to a {@link GameEntity}. The meaning of «run» is decided by the components themselves. */
 	public void run(float step, boolean isServer) {
 		for(Integer id : entities.keys()) {
@@ -85,8 +95,10 @@ public class EntityManager {
 			entity.setId(++entityId);
 		}
 //		entity.attachUserdata(new BodyData());
-		entity.load(world);
+		entity.load(world, this);
 		entities.put(entityId, entity);
+		
+		if(listener != null) listener.loadedEntity(entity);
 		
 //		entityId++;
 		
@@ -116,5 +128,13 @@ public class EntityManager {
 		if(removed != null) {
 			addEntities(removed);
 		}
+	}
+	
+	public void setListener(ManagerListener listener) {
+		this.listener = listener;
+	}
+	
+	public interface ManagerListener {
+		public void loadedEntity(GameEntity entity);
 	}
 }

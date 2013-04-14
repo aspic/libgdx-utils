@@ -16,6 +16,7 @@ public class GameEntity {
 	
 	// Reference for Box2D world.
 	private World world;
+	private EntityManager manager;
 	
 	// Fields
 	private boolean alive = true;
@@ -55,8 +56,9 @@ public class GameEntity {
 	 * This happens on the game loop
 	 * @param world
 	 */
-	public void load(World world) {
+	public void load(World world, EntityManager manager) {
 		this.world = world;
+		this.manager = manager;
 	}
 	
 	/** Attach some userdata to this {@link GameEntity} */
@@ -200,6 +202,10 @@ public class GameEntity {
 	
 	public World getWorld() {
 		return this.world;
+	}
+	
+	public EntityManager getManager() {
+		return this.manager;
 	}
 	
 	public String getOwner() {
