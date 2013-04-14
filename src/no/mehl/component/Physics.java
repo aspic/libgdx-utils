@@ -37,7 +37,7 @@ public abstract class Physics extends Component {
 	
 	@Override
 	protected void loadServer(GameEntity entity)  {
-		loadClient(entity);
+		
 	}
 	
 	@Override

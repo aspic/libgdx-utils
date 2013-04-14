@@ -2,6 +2,7 @@ package no.mehl.component.physics;
 
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
+import no.mehl.component.UserData;
 import no.mehl.libgdx.utils.Dimension;
 
 import com.badlogic.gdx.math.Vector2;
@@ -12,7 +13,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class MarblePhysics extends Physics {
 
-	public MarblePhysics() {}
+	public MarblePhysics() {
+		this(new UserData(), new Vector2(), new Dimension(1));
+	}
 	
 	public MarblePhysics(Userdata data, Vector2 position, Dimension dimension) {
 		this(data, new Vector3(position.x, position.y, 0), dimension);
@@ -51,11 +54,12 @@ public class MarblePhysics extends Physics {
 	@Override
 	protected BodyDef createBodyDef() {
 		BodyDef def = new BodyDef();
-		def.type = BodyType.DynamicBody;
-		if(position != null) {
-			def.position.set(position.x, position.y);
-			def.linearDamping = 1f;
-		}
+		
+		BodyType type = data.get(UserData.D_BODY, BodyType.class);
+		def.type = type != null ? type : BodyType.DynamicBody;
+		def.linearDamping = 0.5f;
+		
+		
 		return def;
 	}
 	
@@ -69,7 +73,7 @@ public class MarblePhysics extends Physics {
 		CircleShape s = new CircleShape();
 		s.setRadius(dim.getRadius());
 		
-		body.createFixture(s, 1f);
+		body.createFixture(s, 1f).setUserData(data);
 		s.dispose();
 	}
 }

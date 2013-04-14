@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class MoveableQuad extends Physics {
@@ -93,7 +94,7 @@ public class MoveableQuad extends Physics {
 		PolygonShape s = new PolygonShape();
 		s.setAsBox(dim.getWidth()*0.5f, dim.getHeight()*0.5f);
 		
-		body.createFixture(s, 1f);
+		body.createFixture(s, 1f).setUserData(data);
 		s.dispose();
 	}
 }

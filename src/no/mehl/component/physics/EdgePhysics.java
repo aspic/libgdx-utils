@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
 
 public class EdgePhysics extends Physics {
 	
@@ -37,7 +38,8 @@ public class EdgePhysics extends Physics {
 	public void updateFixture() {
 		EdgeShape shape = new EdgeShape();
 		shape.set(new Vector2(position.x, position.y), new Vector2(position.x + dim.getWidth(), position.y + dim.getHeight()));
-		body.createFixture(shape, 1f);
+		body.createFixture(shape, 1f).setUserData(data);
+		
 		shape.dispose();
 	}
 }

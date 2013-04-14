@@ -56,6 +56,11 @@ public abstract class Renderer extends Component {
 	}
 	
 	@Override
+	public void runServer(GameEntity entity, float delta) {
+		System.out.println("Renderer runs in server context");
+	}
+	
+	@Override
 	protected void loadServer(GameEntity entity) {
 		System.out.println("Renderer loaded in server context");
 	}

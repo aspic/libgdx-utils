@@ -50,7 +50,7 @@ public class StaticQuad extends Physics {
 		PolygonShape s = new PolygonShape();
 		s.setAsBox(dim.getWidth() * 0.5f, dim.getHeight() * 0.5f);
 
-		body.createFixture(s, 1f);
+		body.createFixture(s, 1f).setUserData(data);
 		s.dispose();
 	}
 }
