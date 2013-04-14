@@ -2,6 +2,7 @@ package no.mehl.component.physics;
 
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
+import no.mehl.component.UserData;
 import no.mehl.libgdx.utils.Dimension;
 
 import com.badlogic.gdx.math.Vector2;
@@ -12,7 +13,9 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class StaticRectangle extends Physics {
 	
-	public StaticRectangle() {}
+	public StaticRectangle() {
+		this(new UserData());
+	}
 	
 	public StaticRectangle(Userdata data, Vector2 position, Dimension dimension) {
 		this(data, new Vector3(position.x, position.y, 0), dimension);
@@ -33,16 +36,21 @@ public class StaticRectangle extends Physics {
 		this.body = entity.getWorld().createBody(createBodyDef());
 		super.loadBody(entity);
 		
+		Vector2 force = null;
+		if((force = data.get(UserData.D_FORCE, Vector2.class)) != null) {
+			applyForce(force.x, force.y);
+		}
+		
 		getPosition();
 	}
 
 	@Override
 	protected BodyDef createBodyDef() {
 		BodyDef def = new BodyDef();
-		def.type = BodyType.StaticBody;
-		if(position != null) {
-			def.position.set(position.x, position.y);
-		}
+		
+		BodyType type = data.get(UserData.D_BODY, BodyType.class);
+		def.type = type != null ? type : BodyType.StaticBody;
+		
 		return def;
 	}
 
