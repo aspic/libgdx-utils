@@ -105,8 +105,8 @@ public class EntityManager {
 		
 		Array<EntitySnapshot> snapshots = new Array<EntitySnapshot>();
 		
-		for (int i = 0; i < entities.size; i++) {
-			GameEntity e = entities.get(i);
+		for (Integer id : entities.keys()) {
+			GameEntity e = entities.get(id);
 			if(e == null) continue;
 			
 			EntitySnapshot snapshot = e.getSnapshot(delta);
