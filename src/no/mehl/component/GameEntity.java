@@ -162,13 +162,15 @@ public class GameEntity {
 			for (int i = 0; i < entity.getComponents().size; i++) {
 				
 				// Let component decide
-				if(!entity.getComponents().get(i).isChanged()) continue;
+				if(!entity.getComponents().get(i).isChanged()) {
+					cps.set(i, null);
+					continue;
+				}
 				
 				// Changed component, extract delta values
 				Snapshot delta = entity.getComponents().get(i).getSnapshot(true);
 				if(delta != null) {
-					if(cps.get(i) == null) cps.set(i, delta);
-					else cps.get(i).set(delta);
+					cps.set(i, delta);
 					changed = true;
 				}
 				
@@ -263,8 +265,13 @@ public class GameEntity {
 	/** Updates all components in this {@link GameEntity}, according to {@link EntitySnapshot} */
 	public void update(EntitySnapshot snapshot) {
 		if(snapshot.destroyed) setRemoved(true);
-		else if(snapshot.cps != null && snapshot.cps.size > 0 && snapshot.cps.get(0) != null) {
+		/**
+		 * TODO: Could/should be optimized
+		 */
+		else if(snapshot.cps != null && snapshot.cps.size > 0) {
 			for (int i = 0; i < snapshot.cps.size; i++) {
+				if(snapshot.cps.get(i) == null) continue;
+				
 				for (int j = 0; j < components.size; j++) {
 					if(components.get(j).getId() == snapshot.cps.get(i).id) {
 						components.get(j).fill(snapshot.cps.get(i));

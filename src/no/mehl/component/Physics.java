@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 import no.mehl.libgdx.utils.Compare;
 import no.mehl.libgdx.utils.Dimension;
@@ -43,7 +42,6 @@ public abstract class Physics extends Component {
 	@Override
 	public void runServer(GameEntity entity, float delta) {
 		
-		setChanged();
 	}
 
 	@Override
@@ -133,6 +131,7 @@ public abstract class Physics extends Component {
 		if(this.body != null && x != 0 && y != 0) {
 			this.body.setLinearVelocity(x, y);
 		}
+		this.velocity.set(x, y, z);
 	}
 	
 	private void updateForce(float x, float y) {
@@ -180,6 +179,7 @@ public abstract class Physics extends Component {
 	 * @return The updated {@link Component}.
 	 */
 	public Physics fill(Snapshot snapshot) {
+		System.out.println("Fills: " + snapshot);
 		angle = snapshot.f_0 != null ? snapshot.f_0.get() : angle;
 		if(snapshot.v3_0 != null) updateTransform(snapshot.v3_0, angle);
 		if(snapshot.v3_1 != null) updateVelocity(snapshot.v3_1.x, snapshot.v3_1.y, snapshot.v3_1.z);
@@ -214,8 +214,17 @@ public abstract class Physics extends Component {
 		this.position.z = z;
 	}
 	
-	public void setUserdata(Object object) {
-		if(this.body != null) this.body.setUserData(object);
+	public void setUserdata(Userdata object) {
+		// Set
+		this.data = object;
+		
+		// Update
+		if(this.body != null) {
+			for (int i = 0; i < body.getFixtureList().size(); i++) {
+				body.getFixtureList().get(i).setUserData(object);
+			}
+			this.body.setUserData(object);
+		}
 	}
 	
 	public interface Userdata {
