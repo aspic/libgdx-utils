@@ -1,10 +1,9 @@
 package no.mehl.component.renderer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.loaders.ModelLoaderRegistry;
 import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
@@ -22,10 +21,11 @@ import no.mehl.libgdx.utils.ShaderManager;
 
 public class ModelRenderer extends Renderer {
 	
-	private Mesh mesh;
+	private StillModel mesh;
 	private Texture texture;
 	private Physics physics;
 	private ShaderProgram shader;
+	private Camera camera;
 	
 	/** Renderer based on first available texture */
 	public ModelRenderer() {
@@ -42,23 +42,22 @@ public class ModelRenderer extends Renderer {
 		physics = entity.getExtends(Physics.class);
 		
 		if(physics instanceof MarblePhysics) {
-			StillModel model = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/jatteplanet.obj"));
-			mesh = model.getSubMeshes()[0].getMesh();
-			texture = new Texture(Gdx.files.internal(key));
+			mesh = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/jatteplanet.obj"));
 			rotate = true;
 		} 
 		else {
-			StillModel model = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/beveled_box.obj"));
-			mesh = model.getSubMeshes()[0].getMesh();
-			int rnd = MathUtils.random(1);
-			texture = new Texture(Gdx.files.internal(key));
+			mesh = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/beveled_box.obj"));
 		}
+		
+		texture = new Texture(Gdx.files.internal(key));
 		if(color == null) setColor(Color.WHITE);
 		
 		shader = ShaderManager.getInstance().compileShader("normal", "shaders/normal2.vert", "shaders/normal2.frag");
 		shader.begin();
 		shader.setUniformi("u_normal", 0);
 		shader.end();
+		
+		camera = ShaderManager.getInstance().getCamera();
 	}
 	
 	private Vector3 initialLight = new Vector3(1f, 1f, 5f);
@@ -75,6 +74,7 @@ public class ModelRenderer extends Renderer {
 	private float rotateAngle = 0;
 	private Matrix4 combined;
 	private boolean rotate;
+	private Vector3 rotVector = new Vector3();
 	
 	@Override
 	public void runClient(GameEntity entity, float delta) {
@@ -89,14 +89,11 @@ public class ModelRenderer extends Renderer {
 		
 		Vector3 position = physics.getPosition();
 		
-		PerspectiveCamera camera = ShaderManager.getInstance().getCamera();
-		Vector3 rotationAxis = new Vector3();
-		
 		if(rotate) {
-			Vector3 velocity = new Vector3(physics.getVelocity().x, physics.getVelocity().y, 0);
-			float length = velocity.len();
+			rotVector.set(physics.getVelocity().x, physics.getVelocity().y, 0);
+			float length = rotVector.len();
 			
-			rotationAxis = surfaceNormal.cpy().crs(velocity.mul(1/length));
+			Vector3 rotationAxis = surfaceNormal.cpy().crs(rotVector.scl(1f/length));
 			rotateAngle += length;
 			
 			Matrix4 temp = matrix.idt();
@@ -111,7 +108,7 @@ public class ModelRenderer extends Renderer {
 		
 		combined = camera.combined.cpy();
 		combined.translate(position.x, position.y, physics.getDimension().getDepth() * 0.5f + position.z);
-		combined.rotate(surfaceNormal, physics.getAngle()*MathUtils.radDeg);
+		if(!rotate) combined.rotate(surfaceNormal, physics.getAngle()*MathUtils.radDeg);
 		combined.scale(physics.getDimension().width, physics.getDimension().height, physics.getDimension().depth);
 		
 		combined.mul(matrix);
@@ -125,10 +122,8 @@ public class ModelRenderer extends Renderer {
 		shader.begin();
 		shader.setUniformMatrix("u_MVMatrix", combined);
     	shader.setUniformf("u_lightDir", lightDir);
-    	if(color != null) {
-    		shader.setUniformf("u_color", color);
-    	}
-		mesh.render(shader, GL20.GL_TRIANGLES);
+		shader.setUniformf("u_color", color);
+		mesh.render(shader);
 		shader.end();
 		Gdx.gl20.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);

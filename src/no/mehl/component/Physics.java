@@ -179,7 +179,6 @@ public abstract class Physics extends Component {
 	 * @return The updated {@link Component}.
 	 */
 	public Physics fill(Snapshot snapshot) {
-		System.out.println("Fills: " + snapshot);
 		angle = snapshot.f_0 != null ? snapshot.f_0.get() : angle;
 		if(snapshot.v3_0 != null) updateTransform(snapshot.v3_0, angle);
 		if(snapshot.v3_1 != null) updateVelocity(snapshot.v3_1.x, snapshot.v3_1.y, snapshot.v3_1.z);

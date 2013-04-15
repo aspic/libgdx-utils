@@ -39,6 +39,7 @@ public class MarblePhysics extends Physics {
 	public void runServer(GameEntity entity, float step) {
 		// Do server side updating
 		if(this.position.z < -10f) {
+			System.out.println("sets alive! " + true);
 			entity.setAlive(false);
 		}
 		
@@ -64,8 +65,10 @@ public class MarblePhysics extends Physics {
 	}
 	
 	public void doJump() {
-		this.velocity.z = 30f;
-		this.gravityZ = GRAV_Z;
+		if(Math.abs(this.velocity.z) < 0.5f) {
+			this.velocity.z = 30f;
+			this.gravityZ = GRAV_Z;
+		}
 	}
 
 	@Override

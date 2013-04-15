@@ -11,7 +11,6 @@ public abstract class Renderer extends Component {
 	protected Snapshot dS = new Snapshot();
 	protected boolean follow;
 	protected String key;
-	
 	protected Color color;
 	
 	/** Return the color for this {@link Renderer}. */
@@ -34,7 +33,6 @@ public abstract class Renderer extends Component {
 	}
 	
 	public Snapshot getSnapshot(boolean delta) {
-		setSynced();
 
 		snapshot.id = getId();
 		
@@ -47,6 +45,7 @@ public abstract class Renderer extends Component {
 			snapshot.s_0 = this.key;
 		}
 		
+		setSynced();
 		return snapshot;
 	}
 	
