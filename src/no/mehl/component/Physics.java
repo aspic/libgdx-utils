@@ -182,7 +182,7 @@ public abstract class Physics extends Component {
 		angle = snapshot.f_0 != null ? snapshot.f_0.get() : angle;
 		if(snapshot.v3_0 != null) updateTransform(snapshot.v3_0, angle);
 		if(snapshot.v3_1 != null) updateVelocity(snapshot.v3_1.x, snapshot.v3_1.y, snapshot.v3_1.z);
-		if(snapshot.v2_0 != null) updateForce(snapshot.v2_0.x, snapshot.v2_0.x);
+		if(snapshot.v2_0 != null) updateForce(snapshot.v2_0.x, snapshot.v2_0.y);
 		if(snapshot.d_0 != null) setDimension(snapshot.d_0);
 		return this;
 	}
