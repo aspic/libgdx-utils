@@ -1,7 +1,5 @@
 package no.mehl.component;
 
-import no.mehl.component.EntityManager.Context;
-
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
