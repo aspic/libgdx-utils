@@ -13,6 +13,7 @@ public abstract class Component {
 	private boolean changed;
 	private boolean loadedClient;
 	private boolean loadedServer;
+	private int id = -1;
 	
 	/** This method registers all serializeable components. Must be loaded in each end point. */
 	public static void registerComponents(Class... comp) {
@@ -43,10 +44,14 @@ public abstract class Component {
 		return getComponentId(this.getClass());
 	}
 	/** Gets the identificator for this {@link Component} */
-	public static int getComponentId(Class<? extends Component> class1) {
+	public int getComponentId(Class<? extends Component> class1) {
+		if(this.id >= 0) return this.id;
 		int id = 0;
 		for (Class<? extends Component> class2 : classes) {
-			if(class1.equals(class2)) return id;
+			if(class1.equals(class2)) {
+				this.id = id;
+				return this.id;
+			}
 			id++;
 		}
 		return -1;
