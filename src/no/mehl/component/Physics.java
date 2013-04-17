@@ -23,7 +23,7 @@ public abstract class Physics extends Component {
 	protected Vector3 lastPos = new Vector3();
 	protected Vector3 toPos;
 	protected float angle;
-	protected Userdata data;
+	protected UserData data;
 	
 	protected Vector2 force = new Vector2();
 	
@@ -34,14 +34,15 @@ public abstract class Physics extends Component {
 	protected float gravityZ = 0f;
 	protected static final float GRAV_Z = -25;
 	
+	/** Loads the client specification, unless overridden */
 	@Override
 	protected void loadServer(GameEntity entity)  {
-		
+		loadClient(entity);
 	}
 	
 	@Override
 	public void runServer(GameEntity entity, float delta) {
-		
+		setChanged();
 	}
 
 	@Override
@@ -157,6 +158,8 @@ public abstract class Physics extends Component {
 		snapshot.v2_0 = Compare.vector(dS.v2_0, getForce());
 		snapshot.f_0 = Compare.mutableFloat(dS.f_0, getAngle());
 		
+		snapshot.data = null;
+		
 		return snapshot.validate();
 	}
 	
@@ -169,6 +172,8 @@ public abstract class Physics extends Component {
 		snapshot.v2_0 = getForce();
 		
 		snapshot.f_0 = new Mutable.Float(getAngle());
+		
+		snapshot.data = data;
 		
 		return snapshot;
 	}
@@ -184,6 +189,7 @@ public abstract class Physics extends Component {
 		if(snapshot.v3_1 != null) updateVelocity(snapshot.v3_1.x, snapshot.v3_1.y, snapshot.v3_1.z);
 		if(snapshot.v2_0 != null) updateForce(snapshot.v2_0.x, snapshot.v2_0.y);
 		if(snapshot.d_0 != null) setDimension(snapshot.d_0);
+		if(snapshot.data != null) setUserdata(snapshot.data);
 		return this;
 	}
 	
@@ -213,7 +219,7 @@ public abstract class Physics extends Component {
 		this.position.z = z;
 	}
 	
-	public void setUserdata(Userdata object) {
+	public void setUserdata(UserData object) {
 		// Set
 		this.data = object;
 		
@@ -226,17 +232,10 @@ public abstract class Physics extends Component {
 		}
 	}
 	
-	public interface Userdata {
-		public Userdata load(GameEntity entity);
-		public Userdata load(GameEntity entity, Physics physics);
-		
-		public <T> T get(String key, Class<T> clazz);
-		public void put(String key, Object object);
-	}
-	
 	/** Load common data for bodies */
 	protected void loadBody(GameEntity entity) {
-		if(data != null) body.setUserData(data.load(entity, this));
+		if(data != null) setUserdata(data.load(entity, this));
+		
 		updateTransform(position, angle);
 		setDimension(dim);
 	}

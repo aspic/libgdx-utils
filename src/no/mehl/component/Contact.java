@@ -69,5 +69,9 @@ public abstract class Contact extends Component {
 	}
 	
 	/** Both responses of this collision impact. Will only be triggered if this contact has not been handled. */
-	public abstract void handle(Contact contact);
+	public abstract void handle(GameEntity with);
+	
+	public GameEntity getEntity() {
+		return this.entity;
+	}
 }

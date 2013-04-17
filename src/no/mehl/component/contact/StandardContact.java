@@ -1,6 +1,7 @@
 package no.mehl.component.contact;
 
 import no.mehl.component.Contact;
+import no.mehl.component.GameEntity;
 
 /**
  * A response describing standard behaviour.
@@ -9,11 +10,11 @@ import no.mehl.component.Contact;
 public class StandardContact extends Contact {
 
 	@Override
-	public void handle(Contact contact) {
-		if(contact instanceof DestroyContact) {
-			this.entity.setAlive(false);
-		} else {
-			System.out.println("No case for this collision.");
-		}
+	public void handle(GameEntity contact) {
+//		if(contact instanceof DestroyContact) {
+//			this.entity.setAlive(false);
+//		} else {
+//			System.out.println("No case for this collision.");
+//		}
 	}
 }
