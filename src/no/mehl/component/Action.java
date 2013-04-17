@@ -20,6 +20,8 @@ public abstract class Action extends Component {
 	@Override
 	public Snapshot getSnapshot(boolean delta) {
 		if(!delta) snapshot.id = getId();
+		
+		setSynced();
 		return snapshot;
 	}
 

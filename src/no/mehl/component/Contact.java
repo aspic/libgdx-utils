@@ -59,6 +59,7 @@ public abstract class Contact extends Component {
 	@Override
 	public Snapshot getSnapshot(boolean delta) {
 		snapshot.id = getId();
+		setSynced();
 		
 		return snapshot;
 	}
@@ -69,7 +70,7 @@ public abstract class Contact extends Component {
 	}
 	
 	/** Both responses of this collision impact. Will only be triggered if this contact has not been handled. */
-	public abstract void handle(GameEntity with);
+	public abstract void collidesWith(GameEntity entity);
 	
 	public GameEntity getEntity() {
 		return this.entity;
