@@ -48,7 +48,6 @@ public class ModelRenderer extends Renderer {
 		else {
 			mesh = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/beveled_box.obj"));
 		}
-		
 		texture = new Texture(Gdx.files.internal(key));
 		if(color == null) setColor(Color.WHITE);
 		

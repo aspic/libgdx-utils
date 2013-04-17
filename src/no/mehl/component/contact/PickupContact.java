@@ -13,7 +13,7 @@ import no.mehl.component.renderer.ModelRenderer;
 public class PickupContact extends Contact {
 	
 	@Override
-	public void handle(GameEntity with) {
+	public void collidesWith(GameEntity with) {
 		ModelRenderer r = new ModelRenderer(Color.GREEN);
 		with.attachComponent(r);
 		

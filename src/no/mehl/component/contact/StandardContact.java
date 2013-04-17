@@ -10,7 +10,7 @@ import no.mehl.component.GameEntity;
 public class StandardContact extends Contact {
 
 	@Override
-	public void handle(GameEntity contact) {
+	public void collidesWith(GameEntity contact) {
 //		if(contact instanceof DestroyContact) {
 //			this.entity.setAlive(false);
 //		} else {

@@ -65,7 +65,6 @@ public class DecalRenderer extends Renderer {
 	@Override
 	public Renderer fill(Snapshot snapshot) {
 		if((key != null && snapshot.s_0 != null) && !key.equals(snapshot.s_0)) {
-			System.out.println("sets decal " + snapshot.s_0);
 			if(decal != null) {
 				decal.setTextureRegion(EntityManager.assets.get(snapshot.s_0));
 			}
