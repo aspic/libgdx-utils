@@ -3,24 +3,26 @@ package no.mehl.component.physics;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Snapshot;
+import no.mehl.component.UserData;
 import no.mehl.libgdx.utils.Dimension;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class MoveableQuad extends Physics {
 	
-	public MoveableQuad() {}
+	public MoveableQuad() {
+		this(new UserData(), new Vector2(), new Dimension());
+	}
 	
-	public MoveableQuad(Userdata data, Vector2 position, Dimension dimension) {
+	public MoveableQuad(UserData data, Vector2 position, Dimension dimension) {
 		this(data, new Vector3(position.x, position.y, 0), dimension, null);
 	}
 	
-	public MoveableQuad(Userdata data, Vector3 position, Dimension dimension, Vector3 toPos) {
+	public MoveableQuad(UserData data, Vector3 position, Dimension dimension, Vector3 toPos) {
 		this.position = position;
 		this.dim = dimension;
 		this.velocity = new Vector3(3f, 3f, 3f);
@@ -43,7 +45,6 @@ public class MoveableQuad extends Physics {
 		float dX = velocity.x * step;
 		float dY = velocity.y * step;
 		float dZ = velocity.z * step;
-		
 		this.position.add(dX, dY, dZ);
 		this.body.setTransform(position.x, position.y, 0);
 		
@@ -51,6 +52,11 @@ public class MoveableQuad extends Physics {
 	}
 	
 	private void turn() {
+		
+		if(toPos == null) {
+			toPos = new Vector3(10f, 10f, 0);
+		}
+		
 		this.velocity.x *= turn(position.x - toPos.x);
 		this.velocity.y *= turn(position.y - toPos.y);
 		this.velocity.z *= turn(position.z - toPos.z);

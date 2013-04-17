@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class MarblePhysics extends Physics {
@@ -17,11 +18,11 @@ public class MarblePhysics extends Physics {
 		this(new UserData(), new Vector2(), new Dimension(1));
 	}
 	
-	public MarblePhysics(Userdata data, Vector2 position, Dimension dimension) {
+	public MarblePhysics(UserData data, Vector2 position, Dimension dimension) {
 		this(data, new Vector3(position.x, position.y, 0), dimension);
 	}
 	
-	public MarblePhysics(Userdata data, Vector3 position, Dimension dim) {
+	public MarblePhysics(UserData data, Vector3 position, Dimension dim) {
 		this.position = position;
 		this.dim = dim;
 		this.data = data;
@@ -39,7 +40,6 @@ public class MarblePhysics extends Physics {
 	public void runServer(GameEntity entity, float step) {
 		// Do server side updating
 		if(this.position.z < -10f) {
-			System.out.println("sets alive! " + true);
 			entity.setAlive(false);
 		}
 		
@@ -48,7 +48,6 @@ public class MarblePhysics extends Physics {
 		
 		// Always reset gravity
 		this.setGravityZ(GRAV_Z);
-		
 		setChanged();
 	}
 	
@@ -56,8 +55,11 @@ public class MarblePhysics extends Physics {
 	protected BodyDef createBodyDef() {
 		BodyDef def = new BodyDef();
 		
-		BodyType type = data.get(UserData.D_BODY, BodyType.class);
-		def.type = type != null ? type : BodyType.DynamicBody;
+		if(data.contains(UserData.D_BODY)) {
+			def.type = BodyType.valueOf((String)data.get(UserData.D_BODY));
+		} else {
+			def.type = BodyType.StaticBody;
+		}
 		def.linearDamping = 0.5f;
 		
 		
@@ -76,7 +78,12 @@ public class MarblePhysics extends Physics {
 		CircleShape s = new CircleShape();
 		s.setRadius(dim.getRadius());
 		
-		body.createFixture(s, 1f).setUserData(data);
+		Fixture fix = body.createFixture(s, 1f);
+		fix.setUserData(data);
+		if(data.contains(UserData.D_SENSOR)) {
+			fix.setSensor((Boolean)data.get(UserData.D_SENSOR));
+		}
+		
 		s.dispose();
 	}
 }

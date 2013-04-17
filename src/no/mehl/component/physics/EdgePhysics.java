@@ -2,6 +2,7 @@ package no.mehl.component.physics;
 
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
+import no.mehl.component.UserData;
 import no.mehl.libgdx.utils.Dimension;
 
 import com.badlogic.gdx.math.Vector2;
@@ -9,13 +10,12 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Fixture;
 
 public class EdgePhysics extends Physics {
 	
 	public EdgePhysics() {}
 	
-	public EdgePhysics(Userdata data, Vector2 position, Dimension dimension) {
+	public EdgePhysics(UserData data, Vector2 position, Dimension dimension) {
 		this.position = new Vector3(position.x, position.y, 0);
 		this.dim = dimension;
 		this.data = data;
