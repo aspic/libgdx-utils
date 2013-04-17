@@ -20,11 +20,13 @@ public class GameEntity {
 	
 	// Fields
 	private boolean alive = true;
+	
 	private boolean removed;
 	private int id = EntityManager.START_ID;
 	private EntitySnapshot snapshot = new EntitySnapshot();
 	
 	private String owner;
+	
 
 	/** Creates an empty {@link GameObject}. */
 	public GameEntity() {
@@ -68,21 +70,19 @@ public class GameEntity {
 		this.manager = manager;
 	}
 	
-	/** Attach some userdata to this {@link GameEntity} */
-	public void attachUserdata(Object userdata) {
-		this.userdata = userdata;
+	/** Add a single {@link Component} */
+	public void attachComponent(Component comp) {
+		attachComponents(comp);
 	}
 	
 	/** Add a range of components */
 	public void attachComponents(Component... comps) {
 		components.addAll(comps);
-	}
-	
-	public void attachComponent(Component comp) {
-		this.components.add(comp);
+		snapshot.updateCapacity(comps.length);
 	}
 	
 	public void removeComponent(Component comp) {
+		comp.destroy(this);
 		this.components.removeValue(comp, true);
 	}
 	
@@ -99,6 +99,7 @@ public class GameEntity {
 	public void setAlive(boolean alive) {
 		this.alive = alive;
 	}
+	
 	
 	/** Will remove this {@link GameEntity} upon next {@link EntityManager} iteration */
 	public void setRemoved(boolean removed) {
@@ -155,6 +156,13 @@ public class GameEntity {
 			cps = new Array<Snapshot>();
 		}
 		
+		// Allocate snapshot capacity
+		public void updateCapacity(int size) {
+			for (int i = 0; i < size; i++) {
+				cps.add(null);
+			}
+		}
+
 		/** Forces a delta update of this {@link EntitySnapshot} */
 		public EntitySnapshot getDelta(GameEntity entity) {
 			id = entity.getId();
@@ -207,6 +215,12 @@ public class GameEntity {
 		public String toString() {
 			return "EntitySnapshot (#" + id + ")";
 		}
+		
+		public void setSize(int size) {
+			if(cps.size != size) {
+				cps.ensureCapacity(size);
+			}
+		}
 	}
 	
 	public World getWorld() {
@@ -228,6 +242,7 @@ public class GameEntity {
 	public Object getUserdata() {
 		return this.userdata;
 	}
+	
 	
 	public Array<Component> getComponents() {
 		return this.components;
@@ -270,14 +285,12 @@ public class GameEntity {
 		 */
 		else if(snapshot.cps != null && snapshot.cps.size > 0) {
 			for (int i = 0; i < snapshot.cps.size; i++) {
-				if(snapshot.cps.get(i) == null) continue;
+				Snapshot cp = snapshot.cps.get(i);
+				if(cp == null) continue;
 				
-				for (int j = 0; j < components.size; j++) {
-					if(components.get(j).getId() == snapshot.cps.get(i).id) {
-						components.get(j).fill(snapshot.cps.get(i));
-						break;
-					}
-				}
+				if(i >= components.size) {
+					components.add(Component.getComponent(cp.id).fill(cp));
+				} else components.get(i).fill(cp);
 			}
 		}
 	}
