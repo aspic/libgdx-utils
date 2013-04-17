@@ -29,12 +29,12 @@ public class ModelRenderer extends Renderer {
 	
 	/** Renderer based on first available texture */
 	public ModelRenderer() {
-		this.key = getTextures()[0];
+		this.key = listTextures()[0];
 	}
 	
 	public ModelRenderer(Color color) {
 		setColor(color);
-		this.key = getTextures()[0];
+		this.key = listTextures()[0];
 	}
 	
 	@Override
@@ -122,7 +122,7 @@ public class ModelRenderer extends Renderer {
 		shader.begin();
 		shader.setUniformMatrix("u_MVMatrix", combined);
     	shader.setUniformf("u_lightDir", lightDir);
-		shader.setUniformf("u_color", color);
+		if(color != null) shader.setUniformf("u_color", color);
 		mesh.render(shader);
 		shader.end();
 		Gdx.gl20.glDisable(GL20.GL_DEPTH_TEST);
@@ -142,7 +142,7 @@ public class ModelRenderer extends Renderer {
 	}
 
 	@Override
-	public String[] getTextures() {
+	public String[] listTextures() {
 		return new String[]{
 				"overlay/marble-normal.jpg",
 				"overlay/metal_normal.png",

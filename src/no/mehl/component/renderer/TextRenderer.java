@@ -88,7 +88,7 @@ public class TextRenderer extends Renderer {
 	}
 
 	@Override
-	public String[] getTextures() {
+	public String[] listTextures() {
 		return null;
 	}
 

@@ -70,5 +70,5 @@ public abstract class Renderer extends Component {
 	}
 	
 	/** Returns a list of appropriate textures for this {@link Renderer} */
-	public abstract String[] getTextures();
+	public abstract String[] listTextures();
 }
