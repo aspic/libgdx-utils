@@ -33,13 +33,14 @@ public abstract class Renderer extends Component {
 	}
 	
 	public Snapshot getSnapshot(boolean delta) {
-
 		snapshot.id = getId();
 		
 		if(delta) {
 			if(dS.c_0 == null) dS.c_0 = new Color();
 			
-			snapshot.c_0 = Compare.compareColor(dS.c_0, getColor());
+			snapshot.c_0 = Compare.compareColor(dS.c_0, color);
+			snapshot.s_0 = Compare.compareString(dS.s_0, key);
+			
 		} else {
 			snapshot.c_0 = this.color;
 			snapshot.s_0 = this.key;

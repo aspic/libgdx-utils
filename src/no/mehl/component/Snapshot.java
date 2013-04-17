@@ -40,6 +40,8 @@ public class Snapshot {
 	public Dimension d_1;
 	public Dimension d_2;
 	
+	public UserData data;
+	
 	public Snapshot() {}
 	
 	public void set(Snapshot snapshot) {
@@ -68,6 +70,8 @@ public class Snapshot {
 		this.d_0 = snapshot.d_0;
 		this.d_1 = snapshot.d_1;
 		this.d_2 = snapshot.d_2;
+		
+		this.data = snapshot.data;
 	}
 	
 	public Snapshot validate() {
