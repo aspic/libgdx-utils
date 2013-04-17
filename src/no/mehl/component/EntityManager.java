@@ -87,7 +87,7 @@ public class EntityManager {
 	}
 	
 	/** Appends the {@link GameEntity} to the removal list */
-	private void queueForRemoval(GameEntity entity) {
+	public void queueForRemoval(GameEntity entity) {
 		entitiesToRemove.add(entity);
 	}
 	
