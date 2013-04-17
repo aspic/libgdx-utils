@@ -3,8 +3,8 @@ package no.mehl.component;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import no.mehl.component.EntityManager.Context;
 import no.mehl.component.GameEntity.EntitySnapshot;
+import no.mehl.component.interfaces.AssetsGetter;
 
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.ObjectMap;
  * @author Kjetil Mehl <kjetil@mehl.no>
  */
 public class EntityManager {
+	
+	public static AssetsGetter assets;
 	
 	private ObjectMap<Integer, GameEntity> entities = new ObjectMap<Integer, GameEntity>();
 	private Queue<GameEntity> entitiesToAdd = new LinkedList<GameEntity>();
@@ -179,6 +181,11 @@ public class EntityManager {
 	public void setContext(Context context) {
 		System.out.println("Set context: " +context);
 		this.context = context;
+	}
+	
+	/** Should be located in this class */
+	public static void registerAssetLoader(AssetsGetter getter) {
+		EntityManager.assets = getter;
 	}
 	
 	public enum Context {
