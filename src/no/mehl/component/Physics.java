@@ -243,4 +243,10 @@ public abstract class Physics extends Component {
 		updateTransform(position, angle);
 		setDimension(dim);
 	}
+
+	public void applyImpulse(float x, float y) {
+		if(this.body != null) {
+			this.body.applyLinearImpulse(x, y,  body.getPosition().x, body.getPosition().y, true);
+		}
+	}
 }
