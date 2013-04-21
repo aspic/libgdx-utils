@@ -1,7 +1,10 @@
 package no.mehl.component.contact;
 
+import com.badlogic.gdx.graphics.Color;
+
 import no.mehl.component.Contact;
 import no.mehl.component.GameEntity;
+import no.mehl.component.renderer.ModelRenderer;
 
 /**
  * The {@link DestroyContact} will destroy the ball if it is hit.
@@ -11,11 +14,6 @@ public class DestroyContact extends Contact {
 	
 	@Override
 	public void collidesWith(GameEntity with) {
-//		if(contact instanceof StandardContact) {
-//			ModelRenderer r = (ModelRenderer)entity.getComponent(Component.getComponentId(ModelRenderer.class));
-//			if(r != null) {
-//				r.setColor(Color.RED);
-//			}
-//		}
+		with.getExtends(ModelRenderer.class).setColor(Color.RED);
 	}
 }

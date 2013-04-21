@@ -10,9 +10,9 @@ import com.badlogic.gdx.utils.Array;
 public abstract class Component {
 
 	private static Array<Class<? extends Component>> classes = new Array<Class<? extends Component>>();
-	private boolean changed;
+	private boolean changed = true;
 	private boolean loadedClient;
-	private boolean loadedServer;
+	protected boolean loadedServer;
 	private int id = -1;
 	
 	/** This method registers all serializeable components. Must be loaded in each end point. */
@@ -27,7 +27,8 @@ public abstract class Component {
 		this.changed = true;
 	}
 	
-	/** Marks this component as synchronised, meaning that it has been transmitted */
+	/** Marks this component as synchronised, meaning that it has been transmitted.
+	 * This method should only be triggered by the class doing the transmittal. */
 	public void setSynced() {
 		this.changed = false;
 	}

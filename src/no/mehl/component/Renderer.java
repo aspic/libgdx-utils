@@ -3,6 +3,7 @@ package no.mehl.component;
 import no.mehl.libgdx.utils.Compare;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector3;
 
 public abstract class Renderer extends Component {
 
@@ -12,6 +13,7 @@ public abstract class Renderer extends Component {
 	protected boolean follow;
 	protected String key;
 	protected Color color;
+	protected Vector3 offset = new Vector3();
 	
 	/** Return the color for this {@link Renderer}. */
 	public Color getColor() {
@@ -24,11 +26,16 @@ public abstract class Renderer extends Component {
 		setChanged();
 	}
 	
+	public void setOffset(Vector3 vec) {
+		this.offset.set(vec);
+		setChanged();
+	}
+	
 	@Override
 	public Renderer fill(Snapshot snapshot) {
 		this.color = snapshot.c_0;
 		this.key = snapshot.s_0;
-		
+		this.offset = snapshot.v3_0 != null ? snapshot.v3_0 : this.offset;
 		return this;
 	}
 	
@@ -40,13 +47,14 @@ public abstract class Renderer extends Component {
 			
 			snapshot.c_0 = Compare.compareColor(dS.c_0, color);
 			snapshot.s_0 = Compare.compareString(dS.s_0, key);
+			snapshot.v3_0 = Compare.vector(dS.v3_0, offset);
 			
 		} else {
 			snapshot.c_0 = this.color;
 			snapshot.s_0 = this.key;
+			snapshot.v3_0 = this.offset;
 		}
 		
-		setSynced();
 		return snapshot;
 	}
 	
@@ -72,4 +80,8 @@ public abstract class Renderer extends Component {
 	
 	/** Returns a list of appropriate textures for this {@link Renderer} */
 	public abstract String[] listTextures();
+	
+	public Vector3 getOffset() {
+		return this.offset;
+	}
 }

@@ -58,7 +58,7 @@ public class MarblePhysics extends Physics {
 		if(data.contains(UserData.D_BODY)) {
 			def.type = BodyType.valueOf((String)data.get(UserData.D_BODY));
 		} else {
-			def.type = BodyType.StaticBody;
+			def.type = BodyType.DynamicBody;
 		}
 		def.linearDamping = 0.5f;
 		

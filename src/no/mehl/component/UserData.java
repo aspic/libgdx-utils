@@ -11,9 +11,11 @@ public class UserData {
 	public static transient final String D_OWNER = "owner";
 	public static transient final String D_FORCE = "force";
 	public static transient final String D_SENSOR = "sensor";
+	public static transient final String D_FILTER = "filter";
 	
 	// Transients
 	private transient GameEntity entity;
+	private transient boolean changed;
 	
 	private ObjectMap<String, Object> store = new ObjectMap<String, Object>();
 	
@@ -29,6 +31,7 @@ public class UserData {
 	}
 	
 	public void put(String key, Object item) {
+		changed = true;
 		store.put(key, item);
 	}
 	
@@ -47,6 +50,14 @@ public class UserData {
 	
 	public GameEntity getEntity() {
 		return this.entity;
+	}
+
+	public UserData retrieve() {
+		if(changed) {
+			changed = false;
+			return this;
+		}
+		return null;
 	}
 	
 }

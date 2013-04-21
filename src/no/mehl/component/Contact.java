@@ -59,7 +59,6 @@ public abstract class Contact extends Component {
 	@Override
 	public Snapshot getSnapshot(boolean delta) {
 		snapshot.id = getId();
-		setSynced();
 		
 		return snapshot;
 	}

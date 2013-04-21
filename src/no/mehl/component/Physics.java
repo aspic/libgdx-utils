@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 
 import no.mehl.libgdx.utils.Compare;
 import no.mehl.libgdx.utils.Dimension;
@@ -47,7 +48,9 @@ public abstract class Physics extends Component {
 
 	@Override
 	public void runClient(GameEntity entity, float delta) {
-		
+//		if(this.snapshot != null) {
+//			fill(this.snapshot);
+//		}
 	}
 	
 	/** Returns the angle of the body in radians */
@@ -117,8 +120,6 @@ public abstract class Physics extends Component {
 	
 	/** Update the position and angle for this body */
 	public void updateTransform(Vector3 pos, float angle) {
-//		this.position = pos != null ?  new Vector3(pos) : new Vector3();
-		
 		// Could be null
 		if(pos == null) {
 			this.position.set(body.getPosition().x, body.getPosition().y, position.z);
@@ -146,7 +147,6 @@ public abstract class Physics extends Component {
 	}
 	
 	public Snapshot get() {
-		
 		if(dS.d_0 == null) dS.d_0 = new Dimension();
 		if(dS.v3_0 == null) dS.v3_0 = new Vector3();
 		if(dS.v3_1 == null) dS.v3_1 = new Vector3();
@@ -162,7 +162,7 @@ public abstract class Physics extends Component {
 		snapshot.v2_0 = Compare.vector(dS.v2_0, getForce());
 		snapshot.f_0 = Compare.mutableFloat(dS.f_0, getAngle());
 		
-		snapshot.data = null;
+		snapshot.data = data.retrieve();
 		
 		return snapshot.validate();
 	}
@@ -194,6 +194,8 @@ public abstract class Physics extends Component {
 		if(snapshot.v2_0 != null) updateForce(snapshot.v2_0.x, snapshot.v2_0.y);
 		if(snapshot.d_0 != null) setDimension(snapshot.d_0);
 		if(snapshot.data != null) setUserdata(snapshot.data);
+		
+		this.snapshot = snapshot;
 		return this;
 	}
 	
@@ -229,10 +231,26 @@ public abstract class Physics extends Component {
 		
 		// Update
 		if(this.body != null) {
+			Filter filter = null;
+			if(data.contains(UserData.D_FILTER)) {
+				filter = (Filter) data.get(UserData.D_FILTER);
+			}
+			
 			for (int i = 0; i < body.getFixtureList().size(); i++) {
 				body.getFixtureList().get(i).setUserData(object);
+				if(filter != null) body.getFixtureList().get(i).setFilterData(filter);
 			}
 			this.body.setUserData(object);
+		}
+	}
+	/** Set a new filter for the fixtures. Will transmit changes */
+	public void setFilterData(Filter filter) {
+		this.data.put(UserData.D_FILTER, filter);
+		
+		if(this.body != null) {
+			for (int i = 0; i < body.getFixtureList().size(); i++) {
+				body.getFixtureList().get(i).setFilterData(filter);
+			}
 		}
 	}
 	
@@ -248,5 +266,17 @@ public abstract class Physics extends Component {
 		if(this.body != null) {
 			this.body.applyLinearImpulse(x, y,  body.getPosition().x, body.getPosition().y, true);
 		}
+	}
+
+	public void setSensor(boolean b) {
+		if(this.body != null) {
+			for (int i = 0; i < body.getFixtureList().size(); i++) {
+				body.getFixtureList().get(i).setSensor(b);
+			}
+		}
+	}
+
+	public void setAngle(float angle) {
+		this.angle = angle;
 	}
 }

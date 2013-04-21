@@ -16,6 +16,7 @@ public class DecalRenderer extends Renderer {
 	
 	private Decal decal;
 	private Physics physics;
+	private float rotationY;
 	
 	public DecalRenderer() {
 		this("staticSpaceObject");
@@ -50,11 +51,15 @@ public class DecalRenderer extends Renderer {
 	public void runClient(GameEntity entity, float delta) {
 		if(physics != null) {
 			Vector3 position = physics.getPosition();
-			decal.setPosition(position.x, position.y, position.z);
-			decal.setRotationZ(physics.getAngle()*MathUtils.radDeg);
+			decal.setPosition(position.x + offset.x, position.y + offset.y, position.z + offset.z);
+			
+			if(up != null && rot != null) {
+				decal.setRotation(rot, up);
+			} else {
+				decal.setRotationZ(physics.getAngle()*MathUtils.radDeg);
+			}
 			
 			ShaderManager.getInstance().getDecalBatch().add(decal);
-			
 			if(follow) {
 				ShaderManager.getInstance().translate(position.x, position.y, position.z + physics.getDimension().depth);
 				ShaderManager.getInstance().keepZDistance(position.z);
@@ -82,5 +87,27 @@ public class DecalRenderer extends Renderer {
 	@Override
 	public String[] listTextures() {
 		return EntityManager.assets.listTextures();
+	}
+
+	public void setRotationY(float rot) {
+		this.rotationY = rot;
+	}
+	public void setRotationX(int rot) {
+		decal.setRotationX(rot);
+	}
+	
+	private Vector3 rot, up;
+	
+	public void setRotation(Vector3 rot, Vector3 up) {
+		this.rot = rot;
+		this.up = up;
+	}
+	
+	public Vector3 getRot() {
+		return this.rot;
+	}
+	
+	public Vector3 getUp() {
+		return this.up;
 	}
 }

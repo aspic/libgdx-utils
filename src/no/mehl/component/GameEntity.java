@@ -179,6 +179,8 @@ public class GameEntity {
 				Snapshot delta = entity.getComponents().get(i).getSnapshot(true);
 				if(delta != null) {
 					cps.set(i, delta);
+					entity.getComponents().get(i).setSynced();
+					
 					changed = true;
 				}
 				
@@ -203,6 +205,7 @@ public class GameEntity {
 			// Loop through components, append full
 			for (Component component : entity.getComponents()) {
 				cps.add(component.getSnapshot(false));
+				component.setSynced();
 			}
 			
 			destroyed = entity.isRemoved();
@@ -311,4 +314,6 @@ public class GameEntity {
 		}
 		return false;
 	}
+	
+	public static GameEntity owns;
 }

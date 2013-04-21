@@ -2,7 +2,7 @@ package no.mehl.component;
 
 public abstract class Action extends Component {
 	
-	private Snapshot snapshot = new Snapshot();
+	protected Snapshot snapshot = new Snapshot();
 	/**
 	 * This method will execute the given {@link Action} (whatever that means).
 	 * Some actions do return a created game object, which then need to be inserted
@@ -19,9 +19,8 @@ public abstract class Action extends Component {
 	
 	@Override
 	public Snapshot getSnapshot(boolean delta) {
-		if(!delta) snapshot.id = getId();
+		snapshot.id = getId();
 		
-		setSynced();
 		return snapshot;
 	}
 
@@ -32,12 +31,10 @@ public abstract class Action extends Component {
 	
 	@Override
 	public void loadClient(GameEntity entity) {
-		// TODO Auto-generated method stub
 	}
 	
 	@Override
 	public void destroy(GameEntity entity) {
-		// TODO:
 	}
 	
 	@Override

@@ -27,7 +27,6 @@ public abstract class Input extends Component {
 		
 		snapshot.id = getId();
 
-		setSynced();
 		return snapshot;
 	}
 
