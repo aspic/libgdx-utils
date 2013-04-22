@@ -1,5 +1,7 @@
 package no.mehl.component;
 
+import no.mehl.component.EntityManager.Context;
+
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -47,7 +49,7 @@ public class GameEntity {
 	public void runServer(float delta) {
 		for (int i = 0; i < components.size; i++) {
 			Component component = components.get(i);
-			component.initialize(this, true);
+			component.initialize(this, Context.SERVER);
 			component.runServer(this, delta);
 		}
 	}
@@ -56,7 +58,17 @@ public class GameEntity {
 	public void runClient(float delta) {
 		for (int i = 0; i < components.size; i++) {
 			Component component = components.get(i);
-			component.initialize(this, false);
+			component.initialize(this, Context.CLIENT);
+			component.runClient(this, delta);
+		}
+	}
+	
+	public void runBoth(float delta) {
+		for (int i = 0; i < components.size; i++) {
+			Component component = components.get(i);
+			component.initialize(this, Context.BOTH);
+
+			component.runServer(this, delta);
 			component.runClient(this, delta);
 		}
 	}
@@ -301,9 +313,11 @@ public class GameEntity {
 	/** Clears existing components, and fills with new instances based on the {@link EntitySnapshot}. */
 	/** TODO: Call destroy and wait for next iteration? */
 	public void create(EntitySnapshot snapshot) {
-		components.clear();
+		if(components == null) components = new Array<Component>();
+		else components.clear();
+		
 		for(Snapshot s : snapshot.cps) {
-			this.components.add((Component)Component.getComponent(s.id).fill(s));
+			components.add((Component)Component.getComponent(s.id).fill(s));
 		}
 	}
 	public boolean owns(Class class1) {

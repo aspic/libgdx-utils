@@ -40,22 +40,20 @@ public class EntityManager {
 	}
 	
 	/** Will run all components attached to a {@link GameEntity}. The meaning of «run» is decided by the components themselves. */
-	public void run(float step) {
+	public void run(float delta) {
 		if(context == Context.SERVER) {
 			for(Integer id : entities.keys()) {
-				entities.get(id).runServer(step);
+				entities.get(id).runServer(delta);
 			}
 		} 
 		else if(context == Context.CLIENT) {
 			for(Integer id : entities.keys()) {
-				entities.get(id).runClient(step);
+				entities.get(id).runClient(delta);
 			}
 		} 
 		else if(context == Context.BOTH) {
 			for(Integer id : entities.keys()) {
-				GameEntity entity = entities.get(id);
-				entity.runServer(step);
-				entity.runClient(step);
+				entities.get(id).runBoth(delta);
 			}
 		}
 	}
