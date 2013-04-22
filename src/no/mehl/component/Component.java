@@ -1,5 +1,7 @@
 package no.mehl.component;
 
+import no.mehl.component.EntityManager.Context;
+
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
@@ -11,8 +13,7 @@ public abstract class Component {
 
 	private static Array<Class<? extends Component>> classes = new Array<Class<? extends Component>>();
 	private boolean changed = true;
-	private boolean loadedClient;
-	protected boolean loadedServer;
+	protected boolean initialized;
 	private int id = -1;
 	
 	/** This method registers all serializeable components. Must be loaded in each end point. */
@@ -59,7 +60,10 @@ public abstract class Component {
 	}
 	/** Returns the {@link Component} given the identificator */
 	public static Component getComponent(int id) {
-		System.out.println("Fetches component: " + id);
+		if(id < 0) {
+			System.err.println("Component not found");
+		}
+		
 		try {
 			return classes.get(id).newInstance();
 		} catch (InstantiationException e) {
@@ -79,15 +83,19 @@ public abstract class Component {
 		System.out.println("NO GRAPHICAL REP FOR " + getClass());
 	}
 	
-	public void initialize(GameEntity entity, boolean server) {
-		if(!loadedServer && server) {
-			loadServer(entity);
-			loadedServer = true;
-		}
-		if(!loadedClient && !server) {
+	public void initialize(GameEntity entity, EntityManager.Context context) {
+		if(initialized) return;
+		
+		if(context == Context.CLIENT) {
 			loadClient(entity);
-			loadedClient = true;
+		} else if(context == Context.SERVER) {
+			loadServer(entity);
+		} else if(context == Context.BOTH) {
+			loadServer(entity);
+			loadClient(entity);
 		}
+		
+		initialized = true;
 	}
 	
 	/** This method gets run on the game loop, to initialize a {@link Component} */
