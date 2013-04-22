@@ -1,24 +1,32 @@
 package no.mehl.component.input;
 
+import com.badlogic.gdx.math.Vector2;
+
 import no.mehl.component.GameEntity;
 import no.mehl.component.Input;
-import no.mehl.component.Physics;
-import no.mehl.component.physics.MarblePhysics;
+import no.mehl.component.physics.Box2DPhysics;
 
 public class StandardInput extends Input {
 	
+	Vector2 input = new Vector2();
+	
 	@Override
 	public void addForce(GameEntity entity, float acclX, float acclY) {
-		Physics p = (Physics)entity.getExtends(Physics.class);
+		Box2DPhysics p = entity.getExtends(Box2DPhysics.class);
+//		System.out.println(p);
 		if(p != null) {
-			p.applyForce(acclX * 5f, acclY * 5f);
+			input.set(acclX, acclY);
+			input.nor();
+			p.updateImpulse(input.x*5f, input.y*5f, 0);
 		}
 	}
 
 	@Override
 	public void doJump(GameEntity entity) {
-		MarblePhysics p = (MarblePhysics)entity.getExtends(Physics.class);
-		if(p != null) p.doJump();
+		Box2DPhysics p = entity.getExtends(Box2DPhysics.class);
+//		if(p != null) p.a
+		if(p != null) p.updateForceZ(30f);
+		
 	}
 
 	@Override
