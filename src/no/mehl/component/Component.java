@@ -92,9 +92,9 @@ public abstract class Component {
 			loadServer(entity);
 		} else if(context == Context.BOTH) {
 			loadServer(entity);
+			initialized = true;
 			loadClient(entity);
 		}
-		
 		initialized = true;
 	}
 	
