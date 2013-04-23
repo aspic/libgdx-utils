@@ -30,8 +30,9 @@ public class Box2DPhysics extends Physics {
 	public static final String TYPE_EDGE = "edge";
 
 	// Fields
-	private Body body;
-	private UserData data;
+	protected Body body;
+	protected UserData data;
+	protected Filter filter;
 	
 	protected float gravityZ = 0f;
 	public static final float GRAV_Z = -25;
@@ -58,19 +59,17 @@ public class Box2DPhysics extends Physics {
 	/** Loads the client specification, unless overridden */
 	@Override
 	protected void loadServer(GameEntity entity)  {
-		
+		if(!initialized) loadClient(entity);
 	}
 	
 	@Override
 	public void runServer(GameEntity entity, float delta) {
+		
 		setChanged();
 	}
 
 	@Override
 	public void runClient(GameEntity entity, float delta) {
-		if(this.snapshot != null) {
-			fill(this.snapshot);
-		}
 	}
 	
 	@Override
@@ -89,6 +88,10 @@ public class Box2DPhysics extends Physics {
 		} else {
 			def.type = BodyType.StaticBody;
 		}
+		if(data.contains(UserData.DEF_FIXED_ROT)) {
+			def.fixedRotation = (Boolean) data.get(UserData.DEF_FIXED_ROT);
+		}
+		
 		return def;
 	}
 	
@@ -110,6 +113,7 @@ public class Box2DPhysics extends Physics {
 			}
 			Fixture fix = body.createFixture(shape, 0.5f);
 			fix.setUserData(data);
+			fix.setFriction(0.3f);
 			
 			if(data.contains(UserData.D_SENSOR)) {
 				fix.setSensor((Boolean) data.get(UserData.D_SENSOR));
@@ -212,6 +216,7 @@ public class Box2DPhysics extends Physics {
 	 * @return The updated {@link Component}.
 	 */
 	public Physics fill(Snapshot snapshot) {
+		angle = snapshot.f_0 != null ? snapshot.f_0.get() : angle;
 		if(snapshot.data != null) setUserdata(snapshot.data);
 		if(snapshot.v3_0 != null) this.updateTransform(snapshot.v3_0.x, snapshot.v3_0.y, snapshot.v3_0.z, angle);
 		if(snapshot.v3_1 != null) this.updateVelocity(snapshot.v3_1.x, snapshot.v3_1.y, snapshot.v3_1.z);
@@ -286,5 +291,9 @@ public class Box2DPhysics extends Physics {
 			this.velocity.z = value;
 			this.gravityZ = GRAV_Z;
 		}
+	}
+	
+	public Filter getFilter() {
+		return this.filter;
 	}
 }
