@@ -83,6 +83,10 @@ public class UserData {
 			this.key = key;
 			this.value = value;
 		}
+		
+		public void setValue(Object object) {
+			this.value = object;
+		}
 	}
 	
 }
