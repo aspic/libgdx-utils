@@ -16,10 +16,11 @@ import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Renderer;
 import no.mehl.component.Snapshot;
-import no.mehl.component.physics.MarblePhysics;
 import no.mehl.libgdx.utils.ShaderManager;
 
 public class ModelRenderer extends Renderer {
+	
+	private final static String path = "models/";
 	
 	private StillModel mesh;
 	private Texture texture;
@@ -27,29 +28,30 @@ public class ModelRenderer extends Renderer {
 	private ShaderProgram shader;
 	private Camera camera;
 	
-	/** Renderer based on first available texture */
+	// Field filled
+	private String objectKey;
+	
 	public ModelRenderer() {
-		this.key = listTextures()[0];
+		this(null);
 	}
 	
-	public ModelRenderer(Color color) {
+	/** Renderer based on first available texture */
+	public ModelRenderer(String objKey) {
+		this(null, objKey, Color.WHITE);
+	}
+	
+	public ModelRenderer(String texKey, String objKey, Color color) {
+		this.key = texKey != null ? texKey : listTextures()[0];
+		this.objectKey = objKey != null ? objKey : Model.BOX.file;
 		setColor(color);
-		this.key = listTextures()[0];
 	}
 	
 	@Override
 	public void loadClient(GameEntity entity) {
 		physics = entity.getExtends(Physics.class);
 		
-		if(physics instanceof MarblePhysics) {
-			mesh = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/jatteplanet.obj"));
-			rotate = true;
-		} 
-		else {
-			mesh = ModelLoaderRegistry.loadStillModel(Gdx.files.internal("models/beveled_box.obj"));
-		}
+		mesh = ModelLoaderRegistry.loadStillModel(Gdx.files.internal(ModelRenderer.path + objectKey));
 		texture = new Texture(Gdx.files.internal(key));
-		if(color == null) setColor(Color.WHITE);
 		
 		shader = ShaderManager.getInstance().compileShader("normal", "shaders/normal2.vert", "shaders/normal2.frag");
 		shader.begin();
@@ -74,6 +76,7 @@ public class ModelRenderer extends Renderer {
 	private Matrix4 combined;
 	private boolean rotate;
 	private Vector3 rotVector = new Vector3();
+	private Vector3 rotationAxis = new Vector3();
 	
 	@Override
 	public void runClient(GameEntity entity, float delta) {
@@ -92,7 +95,11 @@ public class ModelRenderer extends Renderer {
 			rotVector.set(physics.getVelocity().x, physics.getVelocity().y, 0);
 			float length = rotVector.len();
 			
-			Vector3 rotationAxis = surfaceNormal.cpy().crs(rotVector.scl(1f/length));
+			if(length != 0) {
+				rotationAxis = surfaceNormal.cpy().crs(rotVector.scl(1f/length));
+			}
+			
+			
 			rotateAngle += length;
 			
 			Matrix4 temp = matrix.idt();
@@ -133,19 +140,46 @@ public class ModelRenderer extends Renderer {
 	@Override
 	public Renderer fill(Snapshot snapshot) {
 		// Reload texture
-		if((snapshot.s_0 != null && key != null) && !key.equals(snapshot.s_0)) {
+		if(((snapshot.s_0 != null && key != null) && !key.equals(snapshot.s_0)) 
+				|| (snapshot.s_1 != null && objectKey != null) && !objectKey.equals(snapshot.s_1)) {
 			reload = true;
+			
+			this.objectKey = snapshot.s_1;
 		}
 		
 		return super.fill(snapshot);
+	}
+	
+	@Override
+	public Snapshot getSnapshot(boolean delta) {
+		if(!delta) snapshot.s_1 = objectKey;
+		
+		return super.getSnapshot(delta);
 	}
 
 	@Override
 	public String[] listTextures() {
 		return new String[]{
-				"overlay/marble-normal.jpg",
-				"overlay/metal_normal.png",
-				"overlay/ground_normal.png",
+			"overlay/marble-normal.jpg",
+			"overlay/metal_normal.png",
+			"overlay/ground_normal.png",
 		};
+	}
+	
+	public void setRotate(boolean b) {
+		this.rotate = b;
+	}
+	
+	public enum Model {
+		SPHERE("jatteplanet.obj"), DISC("disc.obj"), BOX("beveled_box.obj");
+		public String file;
+		Model(String file) {
+			this.file = file;
+		}
+		
+		public String toString() {
+			return this.file;
+		}
+		
 	}
 }
