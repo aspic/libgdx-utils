@@ -111,7 +111,6 @@ public abstract class Physics extends Component {
 		snapshot.id = getId();
 		
 		snapshot.d_0 = Compare.dimension(dS.d_0, getDimension());
-		
 		snapshot.v3_0 = Compare.vector(dS.v3_0, getPosition());
 		snapshot.v3_1 = Compare.vector(dS.v3_1, getVelocity());
 		snapshot.v3_2 = Compare.vector(dS.v3_2, getImpulse());

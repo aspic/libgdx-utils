@@ -41,8 +41,10 @@ public class Snapshot {
 	public Dimension d_2;
 	
 	public boolean b_0;
+	public boolean b_1;
 	
 	public UserData data;
+
 	
 	public Snapshot() {}
 	
@@ -74,6 +76,7 @@ public class Snapshot {
 		this.d_2 = snapshot.d_2;
 		
 		this.b_0 = snapshot.b_0;
+		this.b_1 = snapshot.b_1;
 		
 		this.data = snapshot.data;
 	}

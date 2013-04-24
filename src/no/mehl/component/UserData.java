@@ -12,6 +12,7 @@ public class UserData {
 	public static transient final String D_FORCE = "force";
 	public static transient final String D_SENSOR = "sensor";
 	public static transient final String D_FILTER = "filter";
+	public static transient final String DEF_FIXED_ROT = "fixed";
 	public static transient final String D_TYPE = "type";
 	
 	// Transients
