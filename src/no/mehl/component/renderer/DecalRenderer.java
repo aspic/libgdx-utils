@@ -14,8 +14,8 @@ import no.mehl.libgdx.utils.ShaderManager;
 
 public class DecalRenderer extends Renderer {
 	
-	private Decal decal;
-	private Physics physics;
+	protected Decal decal;
+	protected Physics physics;
 	private float rotationY;
 	
 	public DecalRenderer() {
@@ -31,7 +31,7 @@ public class DecalRenderer extends Renderer {
 		physics = entity.getExtends(Physics.class);
 		
 		if(physics != null) {
-			decal = Decal.newDecal(physics.getDimension().width, physics.getDimension().height, EntityManager.assets.get(key));
+			decal = Decal.newDecal(physics.getDimension().width, physics.getDimension().height, EntityManager.assets.get(key), true);
 			if(color != null) decal.setColor(color.r, color.g, color.b, color.a);
 		}
 	}
