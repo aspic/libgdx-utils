@@ -2,21 +2,19 @@ package no.mehl.component;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 
 import no.mehl.libgdx.utils.Compare;
 import no.mehl.libgdx.utils.Dimension;
 import no.mehl.libgdx.utils.Mutable;
 
 /**
- * This component definition is tightly coupled to the {@link Body} class in Box2D.
+ * A generic physics component. It provides position, velocity, impulse,
+ * angle and dimensions for some entity.
  * @author Kjetil Mehl <kjetil@mehl.no>
  */
 public abstract class Physics extends Component {
 
 	// Fields
-//	protected Body body;
 	protected Vector3 position = new Vector3();
 	protected Vector3 velocity = new Vector3();
 	protected Vector3 lastVel = new Vector3();
@@ -25,7 +23,6 @@ public abstract class Physics extends Component {
 	protected Vector3 toPos;
 	protected float angle;
 	
-//	protected Vector2 force = new Vector2();
 	protected Dimension dim;
 	protected Snapshot snapshot = new Snapshot();
 	protected Snapshot dS = new Snapshot();
@@ -91,7 +88,7 @@ public abstract class Physics extends Component {
 	}
 	
 	/** Update the velocity for this body */
-	protected void updateVelocity(float x, float y, float z) {
+	public void updateVelocity(float x, float y, float z) {
 		this.velocity.set(x, y, z);
 	}
 	

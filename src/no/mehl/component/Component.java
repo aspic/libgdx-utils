@@ -63,7 +63,6 @@ public abstract class Component {
 		if(id < 0) {
 			System.err.println("Component not found");
 		}
-		
 		try {
 			return classes.get(id).newInstance();
 		} catch (InstantiationException e) {
@@ -75,12 +74,12 @@ public abstract class Component {
 	}
 	
 	/** Indicates whether this {@link Component} extends given @param Clazz */
-	public boolean componentExtends(Class clazz) {
+	public boolean componentExtends(Class<?> clazz) {
 		return clazz.isAssignableFrom(getClass());
 	}
 	
 	public void getGraphicalRepresentation(Table table, Object object) {
-		System.out.println("NO GRAPHICAL REP FOR " + getClass());
+		System.out.println("NO GRAPHICAL REP FOR " + toString());
 	}
 	
 	public void initialize(GameEntity entity, EntityManager.Context context) {
@@ -98,20 +97,24 @@ public abstract class Component {
 		initialized = true;
 	}
 	
-	/** This method gets run on the game loop, to initialize a {@link Component} */
+	/** Loads the component in client context */
 	protected abstract void loadClient(GameEntity entity);
 	
+	/** Loads the component in a server context */
 	protected abstract void loadServer(GameEntity entity);
 	
 	/** {@link Component} gets run in a server context */
 	public abstract void runServer(GameEntity entity, float delta);
+	
 	/** {@link Component} gets run in a client context */
 	public abstract void runClient(GameEntity entity, float delta);
 	
 	/** Returns the updated version for this component snapshot. */
 	public abstract Snapshot getSnapshot(boolean delta);
+	
 	/** Returns the component updated with the provided snapshot. */
 	public abstract Component fill(Snapshot snapshot);
+	
 	/** Method triggered in {@link Component} to tear it down */
 	public abstract void destroy(GameEntity entity);
 	
