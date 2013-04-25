@@ -4,6 +4,7 @@ import no.mehl.libgdx.utils.Dimension;
 import no.mehl.libgdx.utils.Mutable;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -44,6 +45,7 @@ public class Snapshot {
 	public boolean b_1;
 	
 	public UserData data;
+	public long at; // Sent
 
 	
 	public Snapshot() {}
@@ -85,7 +87,5 @@ public class Snapshot {
 		if(f_0 != null || s_0 != null || v2_0 != null || (v3_0 != null && v3_0.len() > 0) || c_0 != null || d_0 != null) return this;
 		return null;
 	}
-
-	
 
 }

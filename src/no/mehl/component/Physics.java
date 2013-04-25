@@ -1,5 +1,6 @@
 package no.mehl.component;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -27,6 +28,13 @@ public abstract class Physics extends Component {
 	protected Snapshot snapshot = new Snapshot();
 	protected Snapshot dS = new Snapshot();
 	
+	protected Snapshot prevSnapshot;
+	protected Snapshot nextSnapshot;
+	
+	// Interpolation
+	private float accumulated;
+	private float diff = 0;
+	
 	/** Loads the client specification, unless overridden */
 	@Override
 	protected void loadServer(GameEntity entity)  {
@@ -37,6 +45,33 @@ public abstract class Physics extends Component {
 	@Override
 	public void runServer(GameEntity entity, float delta) {
 		setChanged();
+	}
+	
+	float acc = 0;
+	
+	@Override
+	public void runClient(GameEntity entity, float delta) {
+		if(EntityManager.interpolate && prevSnapshot != null && nextSnapshot != null) {
+			
+			System.out.println(acc);
+			
+			Vector3 pos, vel, impulse;
+			if(acc < 1f) {
+				pos = Compare.interpolate(prevSnapshot.v3_0, nextSnapshot.v3_0, acc, Interpolation.linear);
+				vel = Compare.interpolate(prevSnapshot.v3_1, nextSnapshot.v3_1, acc, Interpolation.linear);
+				impulse = Compare.interpolate(prevSnapshot.v3_2, nextSnapshot.v3_2, acc, Interpolation.linear);
+			} else {
+				pos = nextSnapshot.v3_0;
+				vel = nextSnapshot.v3_1;
+				impulse = nextSnapshot.v3_2;
+			}
+			System.out.println(pos + " prev " + prevSnapshot.v3_0 + " next " + nextSnapshot.v3_0);
+			if(pos != null) updateTransform(pos.x, pos.y, pos.z, angle);
+			if(vel != null) updateVelocity(vel.x, vel.y, vel.z);
+			if(impulse != null) updateImpulse(impulse.x, impulse.y, impulse.z);
+			
+			acc+= 0.5f;
+		}
 	}
 	
 	public void setAngle(float angle) {
@@ -102,7 +137,6 @@ public abstract class Physics extends Component {
 		if(dS.v3_0 == null) dS.v3_0 = new Vector3();
 		if(dS.v3_1 == null) dS.v3_1 = new Vector3();
 		if(dS.v3_2 == null) dS.v3_2 = new Vector3();
-		if(dS.v2_0 == null) dS.v2_0 = new Vector2();
 		if(dS.f_0 == null) dS.f_0 = new Mutable.Float(0);
 		
 		snapshot.id = getId();
@@ -137,13 +171,33 @@ public abstract class Physics extends Component {
 	 * @return The updated {@link Component}.
 	 */
 	public Physics fill(Snapshot snapshot) {
+		// We want to interpolate
+		if(EntityManager.interpolate) {
+			if(nextSnapshot == null) {
+				setValues(snapshot);
+				nextSnapshot = snapshot;
+				return this;
+			}
+			snapshot.at = System.currentTimeMillis();
+			prevSnapshot = nextSnapshot;
+			nextSnapshot = snapshot;
+			diff = 0.03f;
+			accumulated = 0;
+			acc = 0;
+		} 
+		// Immediately update
+		else {
+			setValues(snapshot);
+		}
+		return this;
+	}
+	
+	private void setValues(Snapshot snapshot) {
 		angle = snapshot.f_0 != null ? snapshot.f_0.get() : angle;
 		if(snapshot.v3_0 != null) updateTransform(snapshot.v3_0.x, snapshot.v3_0.y, snapshot.v3_0.z, angle);
 		if(snapshot.v3_1 != null) updateVelocity(snapshot.v3_1.x, snapshot.v3_1.y, snapshot.v3_1.z);
-		if(snapshot.v2_0 != null) updateImpulse(snapshot.v3_2.x, snapshot.v3_2.y, snapshot.v3_2.z);
+		if(snapshot.v3_2 != null) updateImpulse(snapshot.v3_2.x, snapshot.v3_2.y, snapshot.v3_2.z);
 		if(snapshot.d_0 != null) setDimension(snapshot.d_0);
-		
-		return this;
 	}
 	
 	@Override
