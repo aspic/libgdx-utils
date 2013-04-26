@@ -32,7 +32,6 @@ public abstract class Physics extends Component {
 	protected Snapshot nextSnapshot;
 	
 	// Interpolation
-	private float accumulated;
 	private float diff = 0;
 	
 	/** Loads the client specification, unless overridden */
@@ -53,24 +52,23 @@ public abstract class Physics extends Component {
 	public void runClient(GameEntity entity, float delta) {
 		if(EntityManager.interpolate && prevSnapshot != null && nextSnapshot != null) {
 			
-			System.out.println(acc);
+			float progress = acc/0.03f;
 			
-			Vector3 pos, vel, impulse;
-			if(acc < 1f) {
-				pos = Compare.interpolate(prevSnapshot.v3_0, nextSnapshot.v3_0, acc, Interpolation.linear);
-				vel = Compare.interpolate(prevSnapshot.v3_1, nextSnapshot.v3_1, acc, Interpolation.linear);
-				impulse = Compare.interpolate(prevSnapshot.v3_2, nextSnapshot.v3_2, acc, Interpolation.linear);
-			} else {
-				pos = nextSnapshot.v3_0;
-				vel = nextSnapshot.v3_1;
-				impulse = nextSnapshot.v3_2;
+			Vector3 pos = nextSnapshot.v3_0;
+			Vector3 vel = nextSnapshot.v3_1;
+			Vector3 imp = nextSnapshot.v3_2;
+			
+			if(progress < 1f) {
+				pos = Compare.interpolate(prevSnapshot.v3_0, pos, progress, Interpolation.linear);
+				vel = Compare.interpolate(prevSnapshot.v3_1, vel, progress, Interpolation.linear);
+				imp = Compare.interpolate(prevSnapshot.v3_2, imp, progress, Interpolation.linear);
 			}
-			System.out.println(pos + " prev " + prevSnapshot.v3_0 + " next " + nextSnapshot.v3_0);
+			
 			if(pos != null) updateTransform(pos.x, pos.y, pos.z, angle);
 			if(vel != null) updateVelocity(vel.x, vel.y, vel.z);
-			if(impulse != null) updateImpulse(impulse.x, impulse.y, impulse.z);
+			if(imp != null) updateImpulse(imp.x, imp.y, imp.z);
 			
-			acc+= 0.5f;
+			acc+=delta;
 		}
 	}
 	
@@ -181,8 +179,6 @@ public abstract class Physics extends Component {
 			snapshot.at = System.currentTimeMillis();
 			prevSnapshot = nextSnapshot;
 			nextSnapshot = snapshot;
-			diff = 0.03f;
-			accumulated = 0;
 			acc = 0;
 		} 
 		// Immediately update

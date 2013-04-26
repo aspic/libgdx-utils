@@ -69,10 +69,6 @@ public class Box2DPhysics extends Physics {
 	}
 
 	@Override
-	public void runClient(GameEntity entity, float delta) {
-	}
-	
-	@Override
 	public void loadClient(GameEntity entity) {
 		this.body = entity.getWorld().createBody(createBodyDef());
 		
@@ -173,7 +169,7 @@ public class Box2DPhysics extends Physics {
 	}
 	
 	/** Update the velocity for this body */
-	protected void updateVelocity(float x, float y, float z) {
+	public void updateVelocity(float x, float y, float z) {
 		if(this.body != null) {
 			this.body.setLinearVelocity(x, y);
 		}
@@ -210,19 +206,10 @@ public class Box2DPhysics extends Physics {
 		return super.getFull();
 	}
 	
-	/**
-	 * Fills this Component with snapshot data from the server.
-	 * @param snapshot The data driven snapshot.
-	 * @return The updated {@link Component}.
-	 */
 	public Physics fill(Snapshot snapshot) {
-		angle = snapshot.f_0 != null ? snapshot.f_0.get() : angle;
 		if(snapshot.data != null) setUserdata(snapshot.data);
-		if(snapshot.v3_0 != null) this.updateTransform(snapshot.v3_0.x, snapshot.v3_0.y, snapshot.v3_0.z, angle);
-		if(snapshot.v3_1 != null) this.updateVelocity(snapshot.v3_1.x, snapshot.v3_1.y, snapshot.v3_1.z);
-		if(snapshot.v3_2 != null) this.updateImpulse(snapshot.v3_2.x, snapshot.v3_2.y, snapshot.v3_2.z);
-		if(snapshot.d_0 != null) setDimension(snapshot.d_0);
-		return this;
+		
+		return super.fill(snapshot);
 	}
 	
 	@Override
