@@ -2,11 +2,14 @@ package no.mehl.component;
 
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
+import no.mehl.component.physics.Box2DPhysics;
 
 import com.badlogic.gdx.utils.ObjectMap;
 
+/** A class describing {@link Body} properties, and handling collision responses */
 public class UserData {
 	
+	// Transients
 	public static transient final String D_BODY = "BODY";
 	public static transient final String D_OWNER = "owner";
 	public static transient final String D_FORCE = "force";
@@ -15,7 +18,6 @@ public class UserData {
 	public static transient final String DEF_FIXED_ROT = "fixed";
 	public static transient final String D_TYPE = "type";
 	
-	// Transients
 	private transient GameEntity entity;
 	private transient boolean changed;
 	
@@ -89,5 +91,4 @@ public class UserData {
 			this.value = object;
 		}
 	}
-	
 }

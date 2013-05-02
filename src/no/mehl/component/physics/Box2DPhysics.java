@@ -12,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Shape;
 
-import no.mehl.component.Component;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Snapshot;
@@ -59,7 +58,11 @@ public class Box2DPhysics extends Physics {
 	/** Loads the client specification, unless overridden */
 	@Override
 	protected void loadServer(GameEntity entity)  {
-		if(!initialized) loadClient(entity);
+		this.body = entity.getWorld().createBody(createBodyDef());
+		
+		setUserdata(data.load(entity, this));
+		updateTransform(position.x, position.y, position.z, angle);
+		setDimension(dim);
 	}
 	
 	@Override
@@ -70,11 +73,7 @@ public class Box2DPhysics extends Physics {
 
 	@Override
 	public void loadClient(GameEntity entity) {
-		this.body = entity.getWorld().createBody(createBodyDef());
-		
-		setUserdata(data.load(entity, this));
-		updateTransform(position.x, position.y, position.z, angle);
-		setDimension(dim);
+		if(!initialized) loadServer(entity);
 	}
 	
 	private BodyDef createBodyDef() {
@@ -261,10 +260,6 @@ public class Box2DPhysics extends Physics {
 		if(grav == 0) this.velocity.z = 0;
 	}
 	
-	public void setPosZ(float z) {
-		this.position.z = z;
-	}
-
 	public void setSensor(boolean b) {
 		if(this.body != null) {
 			for (int i = 0; i < body.getFixtureList().size(); i++) {
@@ -282,5 +277,13 @@ public class Box2DPhysics extends Physics {
 	
 	public Filter getFilter() {
 		return this.filter;
+	}
+	
+	public void landed(float z) {
+		if(body.getType() == BodyType.StaticBody) return;
+		if(velocity.z < 0) {
+			this.position.z = z;
+			setGravityZ(0);
+		}
 	}
 }

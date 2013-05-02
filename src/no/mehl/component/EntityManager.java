@@ -19,6 +19,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 public class EntityManager {
 	
 	public static AssetsGetter assets;
+	public static boolean interpolate;
+	public static float step;
 	
 	private ObjectMap<Integer, GameEntity> entities = new ObjectMap<Integer, GameEntity>();
 	private Queue<GameEntity> entitiesToAdd = new LinkedList<GameEntity>();
