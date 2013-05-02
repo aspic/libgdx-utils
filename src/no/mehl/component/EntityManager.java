@@ -95,6 +95,8 @@ public class EntityManager {
 	private void checkForRemoval(World world) {
 		while(entitiesToRemove.size() > 0) {
 			GameEntity removed = entitiesToRemove.poll();
+			if(listener != null) listener.removesEntity(removed);
+			
 			removed.destroy();
 			entities.remove(removed.getId());
 		}
@@ -170,8 +172,12 @@ public class EntityManager {
 		this.listener = listener;
 	}
 	
+	/** Interface for broadcasting changes in this {@link Entity} list */
 	public interface ManagerListener {
+		/** Triggers after a new entity has been successfully inserted into the manager */
 		public void loadedEntity(GameEntity entity);
+		/** Triggers before this entity gets removed from the manager */
+		public void removesEntity(GameEntity entity);
 	}
 	
 	public Context getContext() {
