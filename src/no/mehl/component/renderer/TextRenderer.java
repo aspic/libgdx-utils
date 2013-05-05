@@ -1,5 +1,6 @@
 package no.mehl.component.renderer;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -31,6 +32,11 @@ public class TextRenderer extends Renderer {
 	}
 	
 	public TextRenderer(String text, Vector2 offset) {
+		this(null, text, offset);
+	}
+	
+	public TextRenderer(String key, String text, Vector2 offset) {
+		this.key = listTextures()[0];
 		this.text = text;
 		this.offset = offset;
 	}
@@ -38,7 +44,12 @@ public class TextRenderer extends Renderer {
 	@Override
 	public void loadClient(GameEntity entity) {
 		physics = entity.getExtends(Physics.class);
-		font = new BitmapFont();
+		font = null;
+		if(key != null) {
+			font = new BitmapFont(Gdx.files.internal(key), false);
+		} else {
+			font = new BitmapFont(); // Standard font
+		}
 		batch = ShaderManager.getInstance().getSpriteBatch();
 		camera = ShaderManager.getInstance().getCamera();
 		
@@ -89,7 +100,9 @@ public class TextRenderer extends Renderer {
 
 	@Override
 	public String[] listTextures() {
-		return null;
+		return new String[]{
+				"skin/minecraftia.fnt"
+		};
 	}
 
 }

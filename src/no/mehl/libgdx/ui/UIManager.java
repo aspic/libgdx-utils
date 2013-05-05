@@ -3,6 +3,7 @@ package no.mehl.libgdx.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -47,7 +48,6 @@ public class UIManager extends AssetManager {
 	
 	public void loadUI(float screenHeight) {
 		this.load(atlasPath, TextureAtlas.class);
-		
 		this.scale = screenHeight/768; // Reference height
 	}
 	
@@ -80,7 +80,11 @@ public class UIManager extends AssetManager {
 	}
 	
 	public Label getLabel(String text) {
-		return new Label(text, uiSkin.get(DEFAULT, LabelStyle.class));
+		return getLabel(DEFAULT, text);
+	}
+	
+	public Label getLabel(String key, String text) {
+		return new Label(text, uiSkin.get(key, LabelStyle.class));
 	}
 	
 	public Slider getSlider(float min, float max, float step) {
