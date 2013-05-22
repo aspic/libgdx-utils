@@ -53,9 +53,7 @@ public class Box2DPhysics extends Physics {
 		this.dim = dimension;
 		this.data = data;
 	}
-
 	
-	/** Loads the client specification, unless overridden */
 	@Override
 	protected void loadServer(GameEntity entity)  {
 		this.body = entity.getWorld().createBody(createBodyDef());
@@ -74,6 +72,7 @@ public class Box2DPhysics extends Physics {
 	@Override
 	public void loadClient(GameEntity entity) {
 		if(!initialized) loadServer(entity);
+		setUserdata(data.load(entity, this));
 	}
 	
 	private BodyDef createBodyDef() {
@@ -86,7 +85,6 @@ public class Box2DPhysics extends Physics {
 		if(data.contains(UserData.DEF_FIXED_ROT)) {
 			def.fixedRotation = (Boolean) data.get(UserData.DEF_FIXED_ROT);
 		}
-		
 		return def;
 	}
 	
@@ -108,7 +106,9 @@ public class Box2DPhysics extends Physics {
 			}
 			Fixture fix = body.createFixture(shape, 0.5f);
 			fix.setUserData(data);
-			fix.setFriction(0.3f);
+//			fix.setFriction(0.3f);
+			fix.setRestitution(0.1f);
+			
 			
 			if(data.contains(UserData.D_SENSOR)) {
 				fix.setSensor((Boolean) data.get(UserData.D_SENSOR));
@@ -206,7 +206,9 @@ public class Box2DPhysics extends Physics {
 	}
 	
 	public Physics fill(Snapshot snapshot) {
-		if(snapshot.data != null) setUserdata(snapshot.data);
+		if(snapshot.data != null) {
+			setUserdata(snapshot.data);
+		}
 		
 		return super.fill(snapshot);
 	}
@@ -219,6 +221,7 @@ public class Box2DPhysics extends Physics {
 	public void setUserdata(UserData object) {
 		// Set
 		this.data = object;
+		
 		this.snapshot.data = this.data;
 		
 		// Update
@@ -285,5 +288,8 @@ public class Box2DPhysics extends Physics {
 			this.position.z = z;
 			setGravityZ(0);
 		}
+//		this.position.y = z;
+//		this.body.setLinearVelocity(0, 0);
+//		this.body.applyForceToCenter(0, 2, true);
 	}
 }
