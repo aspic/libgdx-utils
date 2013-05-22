@@ -16,8 +16,12 @@ public abstract class Component {
 	protected boolean initialized;
 	private int id = -1;
 	
-	/** This method registers all serializeable components. Must be loaded in each end point. */
+	/** 
+	 * This method registers all serializeable components. Must be loaded in each end point.
+	 * Will clear the existing array
+	 */
 	public static void registerComponents(Class... comp) {
+		classes.clear();
 		for (int i = 0; i < comp.length; i++) {
 			classes.add(comp[i]);
 		}
@@ -120,5 +124,21 @@ public abstract class Component {
 	
 	public String toString() {
 		return this.getClass().getSimpleName();
+	}
+	
+	public static Array<String> getComponentNames() {
+		Array<String> array = new Array<String>();
+		for (int i = 0; i < classes.size; i++) {
+			array.add(classes.get(i).getSimpleName());
+		}
+		return array;
+	}
+	
+	public static Component inferFromName(String simpleName) {
+		Array<String> names = getComponentNames();
+		for (int i = 0; i < names.size; i++) {
+			if(names.get(i).equals(simpleName)) return getComponent(i);
+		}
+		return null;
 	}
 }
