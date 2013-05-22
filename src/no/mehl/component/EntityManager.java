@@ -1,5 +1,6 @@
 package no.mehl.component;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -63,10 +64,11 @@ public class EntityManager {
 	/** Loops through removed entities, and properly destroys all attached {@link Component}s. */
 	public void checkRemoval(World world) {
 		for (GameEntity entity : entities.values()) {
-			if(!entity.isAlive() && !entity.isRemoved()) {
-				// Will mark the entity as removed, transmitting on the wire and removing on next pass.
-				entity.setRemoved(true);
-			} else if(entity.isRemoved()) {
+//			if(!entity.isAlive() && !entity.isRemoved()) {
+//				// Will mark the entity as removed, transmitting on the wire and removing on next pass.
+//				entity.setRemoved(true);
+//			} else 
+			if(entity.isRemoved()) {
 				// Will remove entirely from engine
 				queueForRemoval(entity);
 			}

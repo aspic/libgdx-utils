@@ -5,8 +5,14 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g3d.loaders.ModelLoaderRegistry;
-import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
+import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.materials.Material;
+import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
@@ -22,11 +28,11 @@ public class ModelRenderer extends Renderer {
 	
 	private final static String path = "models/";
 	
-	private StillModel mesh;
+	private com.badlogic.gdx.graphics.g3d.Model mesh;
 	private Texture texture;
 	private Physics physics;
-	private ShaderProgram shader;
 	private Camera camera;
+	private Material material;
 	
 	// Field filled
 	private String objectKey;
@@ -50,19 +56,28 @@ public class ModelRenderer extends Renderer {
 	public void loadClient(GameEntity entity) {
 		physics = entity.getExtends(Physics.class);
 		
-		mesh = ModelLoaderRegistry.loadStillModel(Gdx.files.internal(ModelRenderer.path + objectKey));
+		mesh = new ObjLoader().loadObj(Gdx.files.internal(ModelRenderer.path + objectKey));
 		texture = new Texture(Gdx.files.internal(key));
 		
-		shader = ShaderManager.getInstance().compileShader("normal", "shaders/normal2.vert", "shaders/normal2.frag");
-		shader.begin();
-		shader.setUniformi("u_normal", 0);
-		shader.end();
-		
 		camera = ShaderManager.getInstance().getCamera();
+		
+		if(objectKey.equals(Model.SPHERE.file)) {
+			rotate = true;
+		}
+		
+		material = new Material(ColorAttribute.createDiffuse(color), new TextureAttribute(TextureAttribute.Normal, texture));
+		modelBatch = new ModelBatch();
+		mesh = ModelBuilder.createFromMesh(mesh.meshes.get(0), GL20.GL_TRIANGLES, material);
+		instance1 = new ModelInstance(mesh);
+		
+//		com.badlogic.gdx.graphics.g3d.Model test = modelBuilder.createBox(1, 1, 1, new Material(new TextureAttribute(TextureAttribute.Normal, texture), ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
+//		instance2 = new ModelInstance(test);
+		
+		System.out.println("HERE?");
 	}
 	
-	private Vector3 initialLight = new Vector3(1f, 1f, 5f);
-	private Vector3 lightDir = new Vector3();
+	private ModelBatch modelBatch;
+	private ModelInstance instance1;
 	private Matrix4 matrix = new Matrix4();
 	private Vector3 surfaceNormal = new Vector3(0, 0, 1f);
 
@@ -73,7 +88,6 @@ public class ModelRenderer extends Renderer {
 	 * axis = n x d / length(d)
 	 */
 	private float rotateAngle = 0;
-	private Matrix4 combined;
 	private boolean rotate;
 	private Vector3 rotVector = new Vector3();
 	private Vector3 rotationAxis = new Vector3();
@@ -94,7 +108,6 @@ public class ModelRenderer extends Renderer {
 		if(rotate) {
 			rotVector.set(physics.getVelocity().x, physics.getVelocity().y, 0);
 			float length = rotVector.len();
-			
 			if(length != 0) {
 				rotationAxis = surfaceNormal.cpy().crs(rotVector.scl(1f/length));
 			}
@@ -107,32 +120,26 @@ public class ModelRenderer extends Renderer {
 			matrix.mul(temp);
 		}
 		
-		if(follow) {
-			ShaderManager.getInstance().translate(position.x, position.y, position.z + physics.getDimension().depth);
-			ShaderManager.getInstance().keepZDistance(position.z);
-		}
+//		combined.translate(position.x, position.y, physics.getDimension().getDepth() * 0.5f + position.z);
 		
-		combined = camera.combined.cpy();
-		combined.translate(position.x, position.y, physics.getDimension().getDepth() * 0.5f + position.z);
-		if(!rotate) combined.rotate(surfaceNormal, physics.getAngle()*MathUtils.radDeg);
-		combined.scale(physics.getDimension().width, physics.getDimension().height, physics.getDimension().depth);
-		
-		combined.mul(matrix);
-		lightDir.set(initialLight);
+//		combined.scale(physics.getDimension().width, physics.getDimension().height, physics.getDimension().depth);
+//		combined.mul(matrix);
 
-		// Enable
-		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
-		Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
+		Matrix4 modelMat = instance1.transform.cpy();
+		instance1.transform.translate(position.x, position.y, physics.getDimension().getDepth() * 0.5f + position.z);
+		instance1.transform.rotate(surfaceNormal, physics.getAngle()*MathUtils.radDeg);
+		instance1.transform.scale(physics.getDimension().width, physics.getDimension().height, physics.getDimension().depth);
 		
-		texture.bind(0);
-		shader.begin();
-		shader.setUniformMatrix("u_MVMatrix", combined);
-    	shader.setUniformf("u_lightDir", lightDir);
-		if(color != null) shader.setUniformf("u_color", color);
-		mesh.render(shader);
-		shader.end();
-		Gdx.gl20.glDisable(GL20.GL_DEPTH_TEST);
-		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
+		modelBatch.begin(camera);
+		modelBatch.render(instance1, ShaderManager.getInstance().getLights());
+		modelBatch.end();
+		
+		instance1.transform.set(modelMat);
+		
+		if(follow) {
+			ShaderManager.getInstance().translate(position.x, position.y, position.z + physics.getDimension().depth + 15f);
+//			ShaderManager.getInstance().keepZDistance(position.z);
+		}
 	}
 	
 	boolean reload;
@@ -164,10 +171,6 @@ public class ModelRenderer extends Renderer {
 			"overlay/metal_normal.png",
 			"overlay/ground_normal.png",
 		};
-	}
-	
-	public void setRotate(boolean b) {
-		this.rotate = b;
 	}
 	
 	public enum Model {
