@@ -1,7 +1,6 @@
 package no.mehl.component;
 
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import no.mehl.libgdx.utils.Compare;
@@ -34,12 +33,6 @@ public abstract class Physics extends Component {
 	// Interpolation
 	private float diff = 0;
 	
-	/** Loads the client specification, unless overridden */
-	@Override
-	protected void loadServer(GameEntity entity)  {
-		loadClient(entity);
-	}
-	
 	/** Will mark this component as changed */
 	@Override
 	public void runServer(GameEntity entity, float delta) {
@@ -51,8 +44,7 @@ public abstract class Physics extends Component {
 	@Override
 	public void runClient(GameEntity entity, float delta) {
 		if(EntityManager.interpolate && prevSnapshot != null && nextSnapshot != null) {
-			
-			float progress = acc/0.03f;
+			float progress = acc/0.05f;
 			
 			Vector3 pos = nextSnapshot.v3_0;
 			Vector3 vel = nextSnapshot.v3_1;
@@ -63,7 +55,6 @@ public abstract class Physics extends Component {
 				vel = Compare.interpolate(prevSnapshot.v3_1, vel, progress, Interpolation.linear);
 				imp = Compare.interpolate(prevSnapshot.v3_2, imp, progress, Interpolation.linear);
 			}
-			
 			if(pos != null) updateTransform(pos.x, pos.y, pos.z, angle);
 			if(vel != null) updateVelocity(vel.x, vel.y, vel.z);
 			if(imp != null) updateImpulse(imp.x, imp.y, imp.z);

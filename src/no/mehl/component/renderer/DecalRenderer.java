@@ -74,7 +74,6 @@ public class DecalRenderer extends Renderer {
 			
 			ShaderManager.getInstance().getDecalBatch().add(decal);
 			if(follow) {
-				
 				ShaderManager.getInstance().getCamera().position.set(position.x, position.y - dist, 5f);
 				ShaderManager.getInstance().getCamera().lookAt(position.x, position.y + dist, 0);
 //				ShaderManager.rotatePoint(ShaderManager.getInstance().getCamera().position, position, physics.getAngle()*MathUtils.radDeg);

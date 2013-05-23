@@ -10,11 +10,19 @@
 	</repository>
   </repositories>
   <dependencies>
+      <!--  
       <dependency>
 		<groupId>com.badlogic.gdx</groupId>
 		<artifactId>gdx</artifactId>
 		<version>0.9.9-SNAPSHOT</version>
 		<scope>provided</scope>
+	</dependency>
+	-->
+	<dependency>
+    	<groupId>junit</groupId>
+    	<artifactId>junit</artifactId>
+    	<version>4.7</version>
+    	<scope>test</scope>
 	</dependency>
   </dependencies>
   <build>

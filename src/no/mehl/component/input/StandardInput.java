@@ -35,7 +35,8 @@ public class StandardInput extends Input {
 	}
 
 	@Override
-	public void control(IType direction) {
+	public void setInput(Object object) {
+		// TODO Auto-generated method stub
 		
 	}
 }

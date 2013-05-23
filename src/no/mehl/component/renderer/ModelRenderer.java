@@ -10,13 +10,11 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
-import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
@@ -28,7 +26,8 @@ public class ModelRenderer extends Renderer {
 	
 	private final static String path = "models/";
 	
-	private com.badlogic.gdx.graphics.g3d.Model mesh;
+	private static com.badlogic.gdx.graphics.g3d.Model mesh;
+	private static ObjectMap<String, com.badlogic.gdx.graphics.g3d.Model> meshes = new ObjectMap<String, com.badlogic.gdx.graphics.g3d.Model>();
 	private Texture texture;
 	private Physics physics;
 	private Camera camera;
@@ -56,8 +55,11 @@ public class ModelRenderer extends Renderer {
 	public void loadClient(GameEntity entity) {
 		physics = entity.getExtends(Physics.class);
 		
-		mesh = new ObjLoader().loadObj(Gdx.files.internal(ModelRenderer.path + objectKey));
-		texture = new Texture(Gdx.files.internal(key));
+		mesh = meshes.get(objectKey);
+		if(mesh == null) {
+			mesh = new ObjLoader().loadObj(Gdx.files.internal(ModelRenderer.path + objectKey));
+			meshes.put(objectKey, mesh);
+		}
 		
 		camera = ShaderManager.getInstance().getCamera();
 		
@@ -65,19 +67,14 @@ public class ModelRenderer extends Renderer {
 			rotate = true;
 		}
 		
-		material = new Material(ColorAttribute.createDiffuse(color), new TextureAttribute(TextureAttribute.Normal, texture));
+		material = new Material(ColorAttribute.createDiffuse(color));
 		modelBatch = new ModelBatch();
 		mesh = ModelBuilder.createFromMesh(mesh.meshes.get(0), GL20.GL_TRIANGLES, material);
-		instance1 = new ModelInstance(mesh);
-		
-//		com.badlogic.gdx.graphics.g3d.Model test = modelBuilder.createBox(1, 1, 1, new Material(new TextureAttribute(TextureAttribute.Normal, texture), ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
-//		instance2 = new ModelInstance(test);
-		
-		System.out.println("HERE?");
+		instance = new ModelInstance(mesh);
 	}
 	
 	private ModelBatch modelBatch;
-	private ModelInstance instance1;
+	private ModelInstance instance;
 	private Matrix4 matrix = new Matrix4();
 	private Vector3 surfaceNormal = new Vector3(0, 0, 1f);
 
@@ -125,19 +122,19 @@ public class ModelRenderer extends Renderer {
 //		combined.scale(physics.getDimension().width, physics.getDimension().height, physics.getDimension().depth);
 //		combined.mul(matrix);
 
-		Matrix4 modelMat = instance1.transform.cpy();
-		instance1.transform.translate(position.x, position.y, physics.getDimension().getDepth() * 0.5f + position.z);
-		instance1.transform.rotate(surfaceNormal, physics.getAngle()*MathUtils.radDeg);
-		instance1.transform.scale(physics.getDimension().width, physics.getDimension().height, physics.getDimension().depth);
+		Matrix4 modelMat = instance.transform.cpy();
+		instance.transform.translate(position.x, position.y, physics.getDimension().getDepth() * 0.5f + position.z);
+		instance.transform.rotate(surfaceNormal, physics.getAngle()*MathUtils.radDeg);
+		instance.transform.scale(physics.getDimension().width, physics.getDimension().height, physics.getDimension().depth);
 		
 		modelBatch.begin(camera);
-		modelBatch.render(instance1, ShaderManager.getInstance().getLights());
+		modelBatch.render(instance, ShaderManager.getInstance().getLights());
 		modelBatch.end();
 		
-		instance1.transform.set(modelMat);
+		instance.transform.set(modelMat);
 		
 		if(follow) {
-			ShaderManager.getInstance().translate(position.x, position.y, position.z + physics.getDimension().depth + 15f);
+			ShaderManager.getInstance().translate(position.x, position.y, position.z + physics.getDimension().depth + 30f);
 //			ShaderManager.getInstance().keepZDistance(position.z);
 		}
 	}

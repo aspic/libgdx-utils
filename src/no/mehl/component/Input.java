@@ -8,8 +8,8 @@ public abstract class Input extends Component {
 	public abstract void addForce(GameEntity entity, float acclX, float acclY);
 	/** Triggers jump for an {@link GameEntity} */
 	public abstract void doJump(GameEntity entity);
-	
-	public abstract void control(IType direction);
+	/** Set some kind of input */
+	public abstract void setInput(Object object);
 	
 	@Override
 	public void runServer(GameEntity entity, float delta) {
@@ -38,10 +38,6 @@ public abstract class Input extends Component {
 	@Override
 	public void destroy(GameEntity entity) {
 		
-	}
-	
-	public static enum IType {
-		LEFT, RIGHT, UP, DOWN, JUMP, ACTION;
 	}
 	
 	@Override

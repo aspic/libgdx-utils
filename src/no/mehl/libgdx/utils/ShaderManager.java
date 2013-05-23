@@ -88,17 +88,22 @@ public class ShaderManager {
 	}
 	
 	public void translate(float x, float y, float z) {
-		toPos.x = x;
-		toPos.y = y;
-//		toPos.z = z;
+		toPos.set(x, y, z);
 	}
+	
+	private Vector3 toLookAt = new Vector3();
 	
 	public void updateCamera(float delta) {
 		float diffX = (toPos.x - this.camera.position.x)*10*delta;
 		float diffY = (toPos.y - this.camera.position.y)*10*delta;
-		float diffZ = (toPos.z - this.camera.position.z)*2*delta;
-
-		this.camera.position.add(diffX, diffY, 0);
+		float diffZ = (toPos.z - this.camera.position.z)*10*delta;
+		this.camera.position.add(diffX, diffY, diffZ);
+//		
+//		diffX = (toLookAt.x - this.camera.direction.x)*10*delta;
+//		diffY = (toLookAt.y - this.camera.direction.y)*10*delta;
+//		diffZ = (toLookAt.z - this.camera.direction.z)*10*delta;
+//		this.camera.direction.add(diffX, diffY, diffZ);
+		
 //		this.camera.position.z = 5f;
 //		this.camera.lookAt(this.camera.position.x, this.camera.position.y+10, 0);
 		

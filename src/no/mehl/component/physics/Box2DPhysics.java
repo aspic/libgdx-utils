@@ -106,6 +106,7 @@ public class Box2DPhysics extends Physics {
 			}
 			Fixture fix = body.createFixture(shape, 0.5f);
 			fix.setUserData(data);
+			fix.setFriction(0);
 //			fix.setFriction(0.3f);
 			fix.setRestitution(0.1f);
 			

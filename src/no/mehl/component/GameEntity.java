@@ -80,6 +80,13 @@ public class GameEntity {
 	public void load(World world, EntityManager manager) {
 		this.world = world;
 		this.manager = manager;
+		
+		if(manager.getContext() == Context.CLIENT) 
+			runClient(1f);
+		else if(manager.getContext() == Context.SERVER)
+			runServer(1f);
+		else
+			runBoth(1f);
 	}
 	
 	/** Add a single {@link Component} */
@@ -110,6 +117,14 @@ public class GameEntity {
 	/** Will properly remove this {@link GameEntity}, after transmitting the change. */
 	public void setAlive(boolean alive) {
 		this.alive = alive;
+	}
+	
+	/** Checks if this entity is alive. If entity is !alive, marks for removal and transmits. */
+	public boolean removeOnTransmit() {
+		if(!alive) {
+			this.removed = true;
+		}
+		return this.removed;
 	}
 	
 	
@@ -198,7 +213,7 @@ public class GameEntity {
 				
 			}
 			
-			destroyed = entity.isRemoved();
+			destroyed = entity.removeOnTransmit();
 			full = false;
 			owner = null;
 			
@@ -220,7 +235,7 @@ public class GameEntity {
 				component.setSynced();
 			}
 			
-			destroyed = entity.isRemoved();
+			destroyed = entity.removeOnTransmit();
 			full = true;
 			fullTransmitted = true;
 
@@ -267,7 +282,8 @@ public class GameEntity {
 	 * @return */
 	/** TODO: Used to access some "existing" components, should be used otherwise */
 	public <T> T getExtends(Class<T> clazz) {
-		for (Component c : components) {
+		for(int i = 0; i < components.size; i++) {
+			Component c = components.get(i);
 			if(c.componentExtends(clazz))  {
 				return (T) c;
 			}
