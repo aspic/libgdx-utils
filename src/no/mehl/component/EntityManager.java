@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import no.mehl.component.GameEntity.EntitySnapshot;
-import no.mehl.component.interfaces.AssetsGetter;
+import no.mehl.libgdx.utils.AssetsGetter;
 
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -64,12 +64,7 @@ public class EntityManager {
 	/** Loops through removed entities, and properly destroys all attached {@link Component}s. */
 	public void checkRemoval(World world) {
 		for (GameEntity entity : entities.values()) {
-//			if(!entity.isAlive() && !entity.isRemoved()) {
-//				// Will mark the entity as removed, transmitting on the wire and removing on next pass.
-//				entity.setRemoved(true);
-//			} else 
 			if(entity.isRemoved()) {
-				// Will remove entirely from engine
 				queueForRemoval(entity);
 			}
 		}
@@ -104,7 +99,7 @@ public class EntityManager {
 		}
 	}
 
-	/** Retrieves full/delta snapshots, ready for serialization */
+	/** Retrieves full/delta snapshots, ready to be serialised */
 	public Array<EntitySnapshot> getSnapshots(boolean delta) {
 		
 		if(entities == null || entities.size == 0) return null;
@@ -137,10 +132,12 @@ public class EntityManager {
 		} else {
 			entity.setId(++entityId);
 		}
+		
 		entity.load(world, this);
+		
 		entities.put(entityId, entity);
 		
-		if(listener != null) listener.loadedEntity(entity);
+		if(listener != null) listener.loadedEntity(entity, entitiesToAdd.size());
 		
 		return entity;
 	}
@@ -177,7 +174,7 @@ public class EntityManager {
 	/** Interface for broadcasting changes in this {@link Entity} list */
 	public interface ManagerListener {
 		/** Triggers after a new entity has been successfully inserted into the manager */
-		public void loadedEntity(GameEntity entity);
+		public void loadedEntity(GameEntity entity, int left);
 		/** Triggers before this entity gets removed from the manager */
 		public void removesEntity(GameEntity entity);
 	}
