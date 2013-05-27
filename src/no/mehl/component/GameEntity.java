@@ -292,8 +292,8 @@ public class GameEntity {
 	}
 	
 	/** Method for swapping two components */
-	public void swapComponent(Component replacement, Class class1) {
-		Component predecessor = getExtends(class1);
+	public <T> void swapComponent(Component replacement, Class<T> class1) {
+		Component predecessor = (Component)getExtends(class1);
 		if(predecessor != null) {
 			predecessor.destroy(this);
 			components.removeValue(predecessor, true);
@@ -336,7 +336,7 @@ public class GameEntity {
 			components.add((Component)Component.getComponent(s.id).fill(s));
 		}
 	}
-	public boolean owns(Class class1) {
+	public boolean owns(Class<?> class1) {
 		for (Component c : components) {
 			if(c.componentExtends(class1)) {
 				return true;
