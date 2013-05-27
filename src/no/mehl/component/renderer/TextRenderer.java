@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
@@ -36,7 +37,7 @@ public class TextRenderer extends Renderer {
 	}
 	
 	public TextRenderer(String key, String text, Vector2 offset) {
-		this.key = listTextures()[0];
+		this.key = key == null ? listTextures()[0] : key;
 		this.text = text;
 		this.offset = offset;
 	}
@@ -67,7 +68,8 @@ public class TextRenderer extends Renderer {
 			Matrix4 projection = camera.combined.cpy();
 			
 			projection.translate(physics.getPosition().x, physics.getPosition().y , physics.getPosition().z + 1f);
-			projection.scale(0.1f, 0.1f, 0.1f);
+			projection.scale(0.05f, 0.05f, 0.05f);
+//			projection.rotate(new Vector3(1, 0, 0), 90f);
 			
 			batch.setProjectionMatrix(projection);
 			batch.begin();
@@ -101,7 +103,8 @@ public class TextRenderer extends Renderer {
 	@Override
 	public String[] listTextures() {
 		return new String[]{
-				"skin/minecraftia.fnt"
+				"skin/minecraftia.fnt",
+				"skin/fonts/small-h1.fnt"
 		};
 	}
 

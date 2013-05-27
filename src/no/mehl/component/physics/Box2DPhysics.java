@@ -108,7 +108,7 @@ public class Box2DPhysics extends Physics {
 			fix.setUserData(data);
 			fix.setFriction(0);
 //			fix.setFriction(0.3f);
-			fix.setRestitution(0.1f);
+			fix.setRestitution(0.2f);
 			
 			
 			if(data.contains(UserData.D_SENSOR)) {

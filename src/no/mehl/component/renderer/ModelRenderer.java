@@ -1,21 +1,20 @@
 package no.mehl.component.renderer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.ObjectMap;
 
+import no.mehl.component.EntityManager;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Renderer;
@@ -24,10 +23,9 @@ import no.mehl.libgdx.utils.ShaderManager;
 
 public class ModelRenderer extends Renderer {
 	
-	private final static String path = "models/";
+	public final static String path = "models/";
 	
-	private static com.badlogic.gdx.graphics.g3d.Model mesh;
-	private static ObjectMap<String, com.badlogic.gdx.graphics.g3d.Model> meshes = new ObjectMap<String, com.badlogic.gdx.graphics.g3d.Model>();
+	private Model model;
 	private Texture texture;
 	private Physics physics;
 	private Camera camera;
@@ -47,30 +45,30 @@ public class ModelRenderer extends Renderer {
 	
 	public ModelRenderer(String texKey, String objKey, Color color) {
 		this.key = texKey != null ? texKey : listTextures()[0];
-		this.objectKey = objKey != null ? objKey : Model.BOX.file;
+		this.objectKey = objKey != null ? objKey : listTextures()[0];
 		setColor(color);
 	}
 	
 	@Override
 	public void loadClient(GameEntity entity) {
 		physics = entity.getExtends(Physics.class);
-		
-		mesh = meshes.get(objectKey);
-		if(mesh == null) {
-			mesh = new ObjLoader().loadObj(Gdx.files.internal(ModelRenderer.path + objectKey));
-			meshes.put(objectKey, mesh);
-		}
+		System.out.println(objectKey);
+		model = EntityManager.assets.getModel("assets/"+ModelRenderer.path + objectKey);
+//		if(models == null) {
+//			models = new ObjLoader().loadObj(Gdx.files.internal(ModelRenderer.path + objectKey));
+//			meshes.put(objectKey, models);
+//		}
 		
 		camera = ShaderManager.getInstance().getCamera();
 		
-		if(objectKey.equals(Model.SPHERE.file)) {
-			rotate = true;
-		}
+//		if(objectKey.equals(Model.SPHERE.file)) {
+//			rotate = true;
+//		}
 		
 		material = new Material(ColorAttribute.createDiffuse(color));
 		modelBatch = new ModelBatch();
-		mesh = ModelBuilder.createFromMesh(mesh.meshes.get(0), GL20.GL_TRIANGLES, material);
-		instance = new ModelInstance(mesh);
+		model = ModelBuilder.createFromMesh(model.meshes.get(0), GL20.GL_TRIANGLES, material);
+		instance = new ModelInstance(model);
 	}
 	
 	private ModelBatch modelBatch;
@@ -170,16 +168,11 @@ public class ModelRenderer extends Renderer {
 		};
 	}
 	
-	public enum Model {
-		SPHERE("jatteplanet.obj"), DISC("disc.obj"), BOX("beveled_box.obj");
-		public String file;
-		Model(String file) {
-			this.file = file;
-		}
-		
-		public String toString() {
-			return this.file;
-		}
-		
+	public String[] listModels() {
+		return new String[] {
+			"jatteplanet.obj",
+			"disc.obj",
+			"beveled_box.obj"
+		};
 	}
 }

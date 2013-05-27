@@ -21,6 +21,8 @@ public abstract class Input extends Component {
 		
 	}
 	
+	public abstract void processInput();
+		
 	@Override
 	public Snapshot getSnapshot(boolean delta) {
 		if(delta) return null;

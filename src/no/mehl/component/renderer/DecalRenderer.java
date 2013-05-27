@@ -4,19 +4,14 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.lights.PointLight;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Plane;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Ray;
 
 import no.mehl.component.EntityManager;
 import no.mehl.component.GameEntity;
 import no.mehl.component.Physics;
 import no.mehl.component.Renderer;
 import no.mehl.component.Snapshot;
-import no.mehl.libgdx.ui.UIManager;
 import no.mehl.libgdx.utils.ShaderManager;
 
 public class DecalRenderer extends Renderer {
@@ -25,6 +20,7 @@ public class DecalRenderer extends Renderer {
 	protected Physics physics;
 	private float rotationY;
 	private PointLight light = new PointLight();
+	private Camera camera;
 	
 	public DecalRenderer() {
 		this("staticSpaceObject");
@@ -38,12 +34,17 @@ public class DecalRenderer extends Renderer {
 	public void loadClient(GameEntity entity) {
 		physics = entity.getExtends(Physics.class);
 		if(physics != null) {
-			System.out.println(physics.getDimension());
 			decal = Decal.newDecal(physics.getDimension().width, physics.getDimension().height, EntityManager.assets.get(key), true);
-			if(color != null) decal.setColor(color.r, color.g, color.b, color.a);
-			light.color.set(Color.WHITE);
-			light.intensity = 20f;
+			if(color != null) {
+				decal.setColor(color);
+				light.color.set(color);
+			} else {
+				light.color.set(0.9f, 0.2f, 0.2f, 1f);
+			}
+			light.intensity = 50f;
 			ShaderManager.getInstance().getLights().add(light);
+			
+			camera = ShaderManager.getInstance().getCamera();
 		}
 	}
 	
@@ -59,6 +60,7 @@ public class DecalRenderer extends Renderer {
 	}
 	
 	float dist = 7f;
+	float xOffset;
 	
 	@Override
 	public void runClient(GameEntity entity, float delta) {
@@ -74,14 +76,20 @@ public class DecalRenderer extends Renderer {
 			
 			ShaderManager.getInstance().getDecalBatch().add(decal);
 			if(follow) {
-				ShaderManager.getInstance().getCamera().position.set(position.x, position.y - dist, 5f);
-				ShaderManager.getInstance().getCamera().lookAt(position.x, position.y + dist, 0);
-//				ShaderManager.rotatePoint(ShaderManager.getInstance().getCamera().position, position, physics.getAngle()*MathUtils.radDeg);
-//				ShaderManager.getInstance().keepZDistance(position.z);
-				float x = MathUtils.sin(physics.getAngle());
-				float y = MathUtils.cos(physics.getAngle());
 				
-				light.position.set(position.x + 2*x, position.y + 2*y, 0);
+				float diff = 180*MathUtils.degRad - physics.getAngle();
+				
+				if(diff != 0 && Math.abs(xOffset) <= 10f) {
+					xOffset += diff*0.1f;
+				} else if(diff == 0) {
+					xOffset *= 0.9;
+				}
+				
+				camera.position.set(position.x-xOffset, position.y - dist, 5f);
+				camera.lookAt(position.x, position.y + dist, 0);
+				camera.update();
+				
+				light.position.set(position.x, position.y, position.z);
 			}
 		}
 	}

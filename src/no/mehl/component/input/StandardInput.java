@@ -39,4 +39,10 @@ public class StandardInput extends Input {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void processInput() {
+		// TODO Auto-generated method stub
+		
+	}
 }
