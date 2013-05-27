@@ -3,6 +3,12 @@
   <groupId>no.mehl.libgdx</groupId>
   <artifactId>utils</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <scm>
+    <connection>scm:git:git://github.com/aspic/libgdx-utils.git</connection>
+    <developerConnection>scm:git:git@github.com:aspic/libgdx-utils.git</developerConnection>
+    <url>http://github.com/aspic/libgdx-utils</url>
+    <tag>HEAD</tag>
+  </scm>
   <repositories>
 	<repository>
 		<id>gdx-nightlies</id>
