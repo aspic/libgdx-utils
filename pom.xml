@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>no.mehl.libgdx</groupId>
   <artifactId>utils</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <scm>
     <connection>scm:git:git://github.com/aspic/libgdx-utils.git</connection>
     <developerConnection>scm:git:git@github.com:aspic/libgdx-utils.git</developerConnection>
@@ -38,8 +38,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source/>
-          <target/>
+          <source />
+          <target />
         </configuration>
       </plugin>
     </plugins>
