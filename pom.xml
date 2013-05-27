@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>no.mehl.libgdx</groupId>
   <artifactId>utils</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <url>http://github.com/aspic/libgdx-utils</url>
   <scm>
     <connection>scm:git:git://github.com/aspic/libgdx-utils.git</connection>
