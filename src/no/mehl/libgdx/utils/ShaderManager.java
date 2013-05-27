@@ -1,5 +1,7 @@
 package no.mehl.libgdx.utils;
 
+import java.awt.LinearGradientPaint;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.g3d.lights.PointLight;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -55,6 +58,8 @@ public class ShaderManager {
 		camera.position.z = depth;
 		posZ = depth;
 		origin = new Vector3(camera.position);
+		
+		decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
 	}
 	
 	public ShaderProgram getShader(String key) {
@@ -91,13 +96,17 @@ public class ShaderManager {
 		toPos.set(x, y, z);
 	}
 	
-	private Vector3 toLookAt = new Vector3();
+	Vector3 diff = new Vector3();
 	
 	public void updateCamera(float delta) {
-		float diffX = (toPos.x - this.camera.position.x)*10*delta;
-		float diffY = (toPos.y - this.camera.position.y)*10*delta;
-		float diffZ = (toPos.z - this.camera.position.z)*10*delta;
-		this.camera.position.add(diffX, diffY, diffZ);
+		
+		float dX = (toPos.x - camera.position.x)*0.5f;
+		float dY = (toPos.y - camera.position.y)*0.5f;
+//		float dZ = (toPos.z - camera.position.z)*delta;
+		
+//		System.out.println(diffX);
+		camera.position.add(dX, dY, 0);
+//		this.camera.position.set(toPos);
 //		
 //		diffX = (toLookAt.x - this.camera.direction.x)*10*delta;
 //		diffY = (toLookAt.y - this.camera.direction.y)*10*delta;
@@ -105,7 +114,6 @@ public class ShaderManager {
 //		this.camera.direction.add(diffX, diffY, diffZ);
 		
 //		this.camera.position.z = 5f;
-//		this.camera.lookAt(this.camera.position.x, this.camera.position.y+10, 0);
 		
 		this.camera.update();
 	}
@@ -140,9 +148,6 @@ public class ShaderManager {
 	 * If {@Decal} is added to this batch, call flush at the end of the manager run method. 
 	 */
 	public DecalBatch getDecalBatch() {
-		if(decalBatch == null) {
-			decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
-		}
 		return decalBatch;
 	}
 	private Lights lights;
@@ -152,7 +157,7 @@ public class ShaderManager {
 			lights = new Lights();
 			lights.ambientLight.set(0.3f, 0.3f, 0.3f, 1f);
 			lights.add(new DirectionalLight().set(Color.GRAY, 5, 5f, -5));
-			lights.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), new Vector3(1f, 1f, 1f), 100f));
+			lights.add(new PointLight().set(new Color(0.2f, 1f, 0.2f, 1f), new Vector3(3f, 1f, 1f), 100f));
 		}
 		return lights;
 	}

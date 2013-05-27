@@ -1,11 +1,15 @@
 package no.mehl.libgdx.ui;
 
+import no.mehl.libgdx.utils.AssetsGetter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -26,7 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
  * 
  * @author Kjetil Mehl <kjetil@mehl.no>
  */
-public class UIManager extends AssetManager {
+public class UIManager extends AssetManager implements AssetsGetter {
 	
 	private static UIManager INSTANCE = new UIManager();
 	
@@ -47,6 +51,7 @@ public class UIManager extends AssetManager {
 	
 	public void loadUI(float screenHeight) {
 		this.load(atlasPath, TextureAtlas.class);
+		loadModels("assets/models");
 		this.scale = screenHeight/768; // Reference height
 	}
 	
@@ -56,6 +61,15 @@ public class UIManager extends AssetManager {
 		BitmapFont font = uiSkin.getFont("DEFAULT");
 		font.setScale((15 * scale)/font.getCapHeight());
 		uiSkin.add("DEFAULT", font);
+	}
+	
+	/** Loads all .obj models from the specified path */
+	public void loadModels(String modelPath) {
+		FileHandle handle = Gdx.files.internal(modelPath);
+		
+		for (FileHandle child : handle.list()) {
+			if(child.extension().equals("obj")) load(child.path(), Model.class);
+		}
 	}
 	
 	public Button getButton() {
@@ -135,5 +149,18 @@ public class UIManager extends AssetManager {
 		this.atlasPath = atlasPath;
 		this.skinPath = skinPath;
 		this.params = params;
+	}
+
+	public String[] listTextures() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Model getModel(String path) {
+		return this.get(path, Model.class);
+	}
+	
+	public TextureRegion get(String path) {
+		return null;
 	}
 }
