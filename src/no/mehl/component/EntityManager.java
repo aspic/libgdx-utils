@@ -10,6 +10,7 @@ import no.mehl.libgdx.utils.AssetsGetter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 /**
  * A clean interface for adding and removing {@link GameEntities}.
@@ -44,19 +45,21 @@ public class EntityManager {
 	
 	/** Will run all components attached to a {@link GameEntity}. The meaning of «run» is decided by the components themselves. */
 	public void run(float delta) {
+		Iterator<Entry<Integer, GameEntity>> it = entities.entries().iterator();
+		
 		if(context == Context.SERVER) {
-			for(Integer id : entities.keys()) {
-				entities.get(id).runServer(delta);
+			while(it.hasNext()) {
+				entities.get(it.next().key).runServer(delta);
 			}
 		} 
 		else if(context == Context.CLIENT) {
-			for(Integer id : entities.keys()) {
-				entities.get(id).runClient(delta);
+			while(it.hasNext()) {
+				entities.get(it.next().key).runClient(delta);
 			}
 		} 
 		else if(context == Context.BOTH) {
-			for(Integer id : entities.keys()) {
-				entities.get(id).runBoth(delta);
+			while(it.hasNext()) {
+				entities.get(it.next().key).runBoth(delta);
 			}
 		}
 	}
@@ -105,9 +108,10 @@ public class EntityManager {
 		if(entities == null || entities.size == 0) return null;
 		
 		Array<EntitySnapshot> snapshots = new Array<EntitySnapshot>();
+		Iterator<Entry<Integer, GameEntity>> it = entities.entries().iterator();
 		
-		for (Integer id : entities.keys()) {
-			GameEntity e = entities.get(id);
+		while (it.hasNext()) {
+			GameEntity e = entities.get(it.next().key);
 			if(e == null) continue;
 			
 			EntitySnapshot snapshot = e.getSnapshot(delta);

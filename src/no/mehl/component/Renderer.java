@@ -36,6 +36,7 @@ public abstract class Renderer extends Component {
 		this.color = snapshot.c_0;
 		this.key = snapshot.s_0;
 		this.offset = snapshot.v3_0 != null ? snapshot.v3_0 : this.offset;
+		
 		return this;
 	}
 	

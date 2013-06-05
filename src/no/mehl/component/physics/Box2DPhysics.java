@@ -107,8 +107,7 @@ public class Box2DPhysics extends Physics {
 			Fixture fix = body.createFixture(shape, 0.5f);
 			fix.setUserData(data);
 			fix.setFriction(0);
-//			fix.setFriction(0.3f);
-			fix.setRestitution(0.2f);
+			fix.setRestitution(0.5f);
 			
 			
 			if(data.contains(UserData.D_SENSOR)) {
@@ -221,8 +220,8 @@ public class Box2DPhysics extends Physics {
 	
 	public void setUserdata(UserData object) {
 		// Set
-		this.data = object;
-		
+		GameEntity entity = this.data != null ? this.data.getEntity() : null;
+		this.data = object.load(entity);
 		this.snapshot.data = this.data;
 		
 		// Update
@@ -238,6 +237,7 @@ public class Box2DPhysics extends Physics {
 			}
 			this.body.setUserData(object);
 		}
+		
 	}
 	
 	public UserData getUserdata() {

@@ -1,7 +1,5 @@
 package no.mehl.component;
 
-import no.mehl.component.EntityManager.Context;
-
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -48,26 +46,20 @@ public class GameEntity {
 	/** Run all attached components in a server context */
 	public void runServer(float delta) {
 		for (int i = 0; i < components.size; i++) {
-			Component component = components.get(i);
-			component.initialize(this, Context.SERVER);
-			component.runServer(this, delta);
+			components.get(i).runServer(this, delta);
 		}
 	}
 	
 	/** Run all attached components in a client context */
 	public void runClient(float delta) {
 		for (int i = 0; i < components.size; i++) {
-			Component component = components.get(i);
-			component.initialize(this, Context.CLIENT);
-			component.runClient(this, delta);
+			components.get(i).runClient(this, delta);
 		}
 	}
 	
 	public void runBoth(float delta) {
 		for (int i = 0; i < components.size; i++) {
 			Component component = components.get(i);
-			component.initialize(this, Context.BOTH);
-
 			component.runServer(this, delta);
 			component.runClient(this, delta);
 		}
@@ -81,12 +73,11 @@ public class GameEntity {
 		this.world = world;
 		this.manager = manager;
 		
-		if(manager.getContext() == Context.CLIENT) 
-			runClient(1f);
-		else if(manager.getContext() == Context.SERVER)
-			runServer(1f);
-		else
-			runBoth(1f);
+		// Initialize components 
+		for (int i = 0; i < components.size; i++) {
+			Component component = components.get(i);
+			component.initialize(this, manager.getContext());
+		}
 	}
 	
 	/** Add a single {@link Component} */

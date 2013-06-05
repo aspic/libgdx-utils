@@ -69,7 +69,7 @@ public class TextRenderer extends Renderer {
 			
 			projection.translate(physics.getPosition().x, physics.getPosition().y , physics.getPosition().z + 1f);
 			projection.scale(0.05f, 0.05f, 0.05f);
-//			projection.rotate(new Vector3(1, 0, 0), 90f);
+			projection.rotate(new Vector3(0, 0, 1), 0);
 			
 			batch.setProjectionMatrix(projection);
 			batch.begin();

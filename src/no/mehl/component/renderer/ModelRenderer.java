@@ -52,8 +52,7 @@ public class ModelRenderer extends Renderer {
 	@Override
 	public void loadClient(GameEntity entity) {
 		physics = entity.getExtends(Physics.class);
-		System.out.println(objectKey);
-		model = EntityManager.assets.getModel("assets/"+ModelRenderer.path + objectKey);
+		model = EntityManager.assets.getModel(ModelRenderer.path + objectKey);
 //		if(models == null) {
 //			models = new ObjLoader().loadObj(Gdx.files.internal(ModelRenderer.path + objectKey));
 //			meshes.put(objectKey, models);
