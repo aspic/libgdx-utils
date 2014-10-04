@@ -96,7 +96,6 @@ public class List<T> extends Widget implements Cullable {
 		return style;
 	}
 
-	@Override
 	public void draw (SpriteBatch batch, float parentAlpha) {
 		BitmapFont font = style.font;
 		Drawable selectedDrawable = style.selection;

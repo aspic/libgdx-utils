@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * Main component class. Every component is described by an id and each {@link Component} needs to "implement" specific methods.
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public abstract class Component {
 
@@ -49,6 +49,7 @@ public abstract class Component {
 	public int getId() {
 		return getComponentId(this.getClass());
 	}
+
 	/** Gets the identificator for this {@link Component} */
 	public int getComponentId(Class<? extends Component> class1) {
 		if(this.id >= 0) return this.id;
@@ -60,7 +61,9 @@ public abstract class Component {
 			}
 			id++;
 		}
-		return -1;
+
+        System.err.println("Could not retrieve id for " + class1 + ", remember to add class to components.");
+        return -1;
 	}
 	/** Returns the {@link Component} given the identificator */
 	public static Component getComponent(int id) {
@@ -68,7 +71,7 @@ public abstract class Component {
 			System.err.println("Component not found");
 		}
 		try {
-			return classes.get(id).newInstance();
+            return classes.get(id).newInstance();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

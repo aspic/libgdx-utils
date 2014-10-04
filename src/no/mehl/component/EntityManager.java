@@ -14,9 +14,9 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 /**
  * A clean interface for adding and removing {@link GameEntities}.
- * This class should always know the consistent state of entities in play.
+ * This class should always know the consistent state of no.no.logic.no.mehl.jd.logic.entity.logic.no.mehl.jd.logic in play.
  * 
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public class EntityManager {
 	
@@ -64,7 +64,7 @@ public class EntityManager {
 		}
 	}
 	
-	/** Loops through removed entities, and properly destroys all attached {@link Component}s. */
+	/** Loops through removed no.no.logic.no.mehl.jd.logic.entity.logic.no.mehl.jd.logic, and properly destroys all attached {@link Component}s. */
 	public void checkRemoval(World world) {
 		for (GameEntity entity : entities.values()) {
 			if(entity.isRemoved()) {
@@ -79,7 +79,7 @@ public class EntityManager {
 		entitiesToAdd.add(entity);
 	}
 	
-	/** Convenient method for adding several of entities */
+	/** Convenient method for adding several of no.no.logic.no.mehl.jd.logic.entity.logic.no.mehl.jd.logic */
 	public void addEntities(GameEntity... entities) {
 		for (int i = 0; i < entities.length; i++) {
 			entitiesToAdd.add(entities[i]);
@@ -91,7 +91,7 @@ public class EntityManager {
 		entitiesToRemove.add(entity);
 	}
 	
-	/** Loop through "removed entities" and clear them from the engine */
+	/** Loop through "removed no.no.logic.no.mehl.jd.logic.entity.logic.no.mehl.jd.logic" and clear them from the engine */
 	private void checkForRemoval(World world) {
 		while(entitiesToRemove.size() > 0) {
 			GameEntity removed = entitiesToRemove.poll();
@@ -138,7 +138,7 @@ public class EntityManager {
 		}
 		
 		entity.load(world, this);
-		
+
 		entities.put(entityId, entity);
 		
 		if(listener != null) listener.loadedEntity(entity, entitiesToAdd.size());
@@ -151,7 +151,7 @@ public class EntityManager {
 		return this.entities.get(id);
 	}
 	
-	/** Returns all normal entities (not recently added, or removed) */
+	/** Returns all normal no.no.logic.no.mehl.jd.logic.entity.logic.no.mehl.jd.logic (not recently added, or removed) */
 	public ObjectMap<Integer, GameEntity> getEntities() {
 		return this.entities;
 	}
@@ -199,5 +199,30 @@ public class EntityManager {
 	
 	public enum Context {
 		SERVER, CLIENT, BOTH;
+	}
+
+	public void updateEntities(Array<EntitySnapshot> updated) {
+		Iterator<Entry<Integer, GameEntity>> it = entities.entries().iterator();
+		
+		while (it.hasNext()) {
+			GameEntity e = entities.get(it.next().key);
+			if(e == null) continue;
+			
+			for (int i = 0; i < updated.size; i++) {
+				if(updated.get(i).id == e.getId()) {
+					if(i == 1) {
+						Physics p = e.getExtends(Physics.class);
+						System.out.println("Was: " + p.getPosition());
+					}
+					e.update(updated.get(i));
+					if(i == 1) {
+						Physics p = e.getExtends(Physics.class);
+						System.out.println("Is: " + p.getPosition());
+					}
+				}
+			}
+			
+		}
+		
 	}
 }

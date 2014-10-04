@@ -3,14 +3,14 @@ package no.mehl.libgdx.utils;
 import java.awt.LinearGradientPaint;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
-import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.lights.Lights;
-import com.badlogic.gdx.graphics.g3d.lights.PointLight;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * A simple class to manage several instances of {@link ShaderProgram}.
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public class ShaderManager {
 
@@ -52,7 +52,7 @@ public class ShaderManager {
 		load(aspect, width, height, depth, 200f);
 	}
 	
-	public void load(float aspect, float width, float height, float depth, float far) {
+	public Camera load(float aspect, float width, float height, float depth, float far) {
 		camera = new PerspectiveCamera(45, width * aspect, height);
 		camera.far = far;
 		camera.position.z = depth;
@@ -60,6 +60,8 @@ public class ShaderManager {
 		origin = new Vector3(camera.position);
 		
 		decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
+		
+		return camera;
 	}
 	
 	public ShaderProgram getShader(String key) {
@@ -105,7 +107,7 @@ public class ShaderManager {
 //		float dZ = (toPos.z - camera.position.z)*delta;
 		
 //		System.out.println(diffX);
-		camera.position.add(dX, dY, 0);
+//		camera.position.add(dX, dY, 0);
 //		this.camera.position.set(toPos);
 //		
 //		diffX = (toLookAt.x - this.camera.direction.x)*10*delta;
@@ -115,7 +117,7 @@ public class ShaderManager {
 		
 //		this.camera.position.z = 5f;
 		
-		this.camera.update();
+//		this.camera.update();
 	}
 	
 	public static ShaderManager getInstance() {
@@ -150,14 +152,12 @@ public class ShaderManager {
 	public DecalBatch getDecalBatch() {
 		return decalBatch;
 	}
-	private Lights lights;
+	private Environment lights;
 	
-	public Lights getLights() {
+	public Environment getLights() {
 		if(lights == null) {
-			lights = new Lights();
-			lights.ambientLight.set(0.3f, 0.3f, 0.3f, 1f);
-			lights.add(new DirectionalLight().set(Color.GRAY, 5, 5f, -5));
-			lights.add(new PointLight().set(new Color(0.2f, 1f, 0.2f, 1f), new Vector3(3f, 1f, 1f), 100f));
+			lights = new Environment();
+			lights.add(new DirectionalLight().set(new Color(0.9f, 0.8f, 0.8f, 1f), 1, 1, -1));
 		}
 		return lights;
 	}

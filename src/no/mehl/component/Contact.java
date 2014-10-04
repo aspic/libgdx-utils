@@ -2,7 +2,7 @@ package no.mehl.component;
 
 /**
  * An abstract class defining contact responses for collisions.
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public abstract class Contact extends Component {
 	
@@ -36,7 +36,7 @@ public abstract class Contact extends Component {
 		return destroyed;
 	}
 	
-	/** If true, this response will not be used more. Typically triggered by entities which are destroyed. */
+	/** If true, this response will not be used more. Typically triggered by no.no.logic.no.mehl.jd.logic.entity.logic.no.mehl.jd.logic which are destroyed. */
 	protected void setHandled() {
 		this.handled = true;
 	}

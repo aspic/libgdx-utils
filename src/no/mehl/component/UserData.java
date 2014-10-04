@@ -76,7 +76,7 @@ public class UserData {
 	
 	/**
 	 * A simple class describing a {@link String} {@link Object} pair
-	 * @author Kjetil Mehl <kjetil@mehl.no>
+	 * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
 	 */
 	public static class DataPair {
 		Object value;

@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * Simple data holder class for a snapshot. This class must keep track of appropriate data types.
  * 
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public class Snapshot {
 

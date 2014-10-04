@@ -8,7 +8,7 @@ import no.mehl.component.renderer.ModelRenderer;
 
 /**
  * The {@link DestroyContact} will destroy the ball if it is hit.
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public class DestroyContact extends Contact {
 	

@@ -1,5 +1,7 @@
 package no.mehl.libgdx.ui;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import no.mehl.libgdx.utils.AssetsGetter;
 
 import com.badlogic.gdx.Gdx;
@@ -10,25 +12,19 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /**
  * A singleton class for handling all loading of assets, such as fonts and textures.
  * 
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public class UIManager extends AssetManager implements AssetsGetter {
 	
@@ -41,8 +37,7 @@ public class UIManager extends AssetManager implements AssetsGetter {
 	
 	private String atlasPath;
 	private String skinPath;
-	private TextureParameter params;
-	
+
 	private float scale;
 	
 	private UIManager() {
@@ -51,26 +46,38 @@ public class UIManager extends AssetManager implements AssetsGetter {
 	
 	public void loadUI(float screenHeight) {
 		this.load(atlasPath, TextureAtlas.class);
-		loadModels("assets/models");
+		
+//		load("models/beveled_box.obj", Model.class);
+//		load("models/jatteplanet.obj", Model.class);
+		
 		this.scale = screenHeight/768; // Reference height
 	}
+
+    public UIManager appendAtlas(String path) {
+        load(path, TextureAtlas.class);
+        return this;
+    }
 	
 	private void initializeUI() {
-		uiSkin = new Skin(Gdx.files.internal(skinPath), this.get(atlasPath, TextureAtlas.class));
+
+        uiSkin = new Skin(Gdx.files.internal(skinPath), this.get(atlasPath, TextureAtlas.class));
 		
-		BitmapFont font = uiSkin.getFont("DEFAULT");
+		BitmapFont font = uiSkin.getFont(DEFAULT);
 		font.setScale((15 * scale)/font.getCapHeight());
-		uiSkin.add("DEFAULT", font);
+		uiSkin.add(DEFAULT, font);
 	}
 	
-	/** Loads all .obj models from the specified path */
-	public void loadModels(String modelPath) {
-		FileHandle handle = Gdx.files.internal(modelPath);
-		
-		for (FileHandle child : handle.list()) {
-			if(child.extension().equals("obj")) load(child.path(), Model.class);
-		}
-	}
+//	/** Loads all .obj models from the specified path */
+//	public void loadModels(String modelPath) {
+//		FileHandle handle = Gdx.files.internal(modelPath);
+//		
+//		System.out.println(handle.exists() + " " + handle.list().length);
+//		
+//		for (FileHandle child : handle.list()) {
+//			System.out.println("Loads: " + child.path());
+//			if(child.extension().equals("obj")) load(child.path(), Model.class);
+//		}
+//	}
 	
 	public Button getButton() {
 		return getButton(DEFAULT);
@@ -85,7 +92,7 @@ public class UIManager extends AssetManager implements AssetsGetter {
 	}
 	
 	public TextButton getTextButton(String key, String text) {
-		return new TextButton(text, uiSkin.get(DEFAULT, TextButtonStyle.class));
+		return new TextButton(text, uiSkin.get(key, TextButtonStyle.class));
 	}
 	
 	public Label getLabel() {
@@ -100,13 +107,17 @@ public class UIManager extends AssetManager implements AssetsGetter {
 		return new Label(text, uiSkin.get(key, LabelStyle.class));
 	}
 	
-	public Slider getSlider(float min, float max, float step) {
+	public com.badlogic.gdx.scenes.scene2d.ui.Slider getSlider(float min, float max, float step) {
 		return getSlider(DEFAULT, min, max, step);
 	}
 	
-	public Slider getSlider(String key, float min, float max, float step) {
-		return new Slider(min, max, step, false, uiSkin.get(key, SliderStyle.class));
+	public com.badlogic.gdx.scenes.scene2d.ui.Slider getSlider(String key, float min, float max, float step) {
+		return new com.badlogic.gdx.scenes.scene2d.ui.Slider(min, max, step, false, uiSkin.get(key, SliderStyle.class));
 	}
+
+    public TextField getTextField() {
+        return getTextField("");
+    }
 	
 	public TextField getTextField(String value) {
 		return getTextField(value, DEFAULT);
@@ -121,7 +132,9 @@ public class UIManager extends AssetManager implements AssetsGetter {
 	}
 	
 	public com.badlogic.gdx.scenes.scene2d.ui.List getList(String[] items, String key) {
-		return new List(items, uiSkin.get(key, ListStyle.class));
+		com.badlogic.gdx.scenes.scene2d.ui.List<String> list = new com.badlogic.gdx.scenes.scene2d.ui.List<String>(uiSkin.get(key, ListStyle.class));
+		list.setItems(items);
+		return list;
 	}
 	
 	public TextureRegion getRegion(String key) {
@@ -131,6 +144,23 @@ public class UIManager extends AssetManager implements AssetsGetter {
 	public Drawable getDrawable(String key) {
 		return this.uiSkin.get(key, Drawable.class);
 	}
+	
+	public com.badlogic.gdx.scenes.scene2d.ui.SelectBox getSelectBox(Object[] items) {
+		return getSelectBox(DEFAULT, items);
+	}
+
+	public SelectBox getSelectBox(String key, Object[] items) {
+		SelectBox<Object> selectBox = new SelectBox<Object>(uiSkin.get(key, SelectBoxStyle.class));
+		selectBox.setItems(items);
+		return selectBox;
+	}
+
+    public ScrollPane getScrollPane(Actor widget) {
+        return new ScrollPane(widget, uiSkin.get(DEFAULT, ScrollPane.ScrollPaneStyle.class));
+    }
+
+
+
 	
 	public boolean initializeAssets() {
 		if(!loaded && update()) {
@@ -145,13 +175,17 @@ public class UIManager extends AssetManager implements AssetsGetter {
 		return UIManager.INSTANCE;
 	}
 	
-	public void build(String atlasPath, String skinPath, TextureParameter params) {
+	public void build(String atlasPath, String skinPath) {
 		this.atlasPath = atlasPath;
 		this.skinPath = skinPath;
-		this.params = params;
 	}
 
-	public String[] listTextures() {
+    @Override
+    public TextureRegion get(String key) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public String[] listTextures() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -159,8 +193,8 @@ public class UIManager extends AssetManager implements AssetsGetter {
 	public Model getModel(String path) {
 		return this.get(path, Model.class);
 	}
-	
-	public TextureRegion get(String path) {
-		return null;
+
+	public TextureRegion get(String path, String key) {
+        return get(path, TextureAtlas.class).findRegion(key);
 	}
 }

@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * A simple class for generating some statistics.
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public class Stats {
 
@@ -102,5 +102,4 @@ public class Stats {
 	public static Stats getInstance() {
 		return INSTANCE;
 	}
-
 }

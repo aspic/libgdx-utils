@@ -1,9 +1,9 @@
 package no.mehl.libgdx.utils;
 
+
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-
 import no.mehl.component.Contact;
 import no.mehl.component.EntityManager;
 import no.mehl.component.GameEntity;
@@ -96,7 +96,7 @@ public class Collision {
 				Contact cr1 = e1.getExtends(Contact.class);
 				Contact cr2 = e2.getExtends(Contact.class);
 				
-				// Only do contact responses if both entities have such component defined
+				// Only do contact responses if both no.no.logic.no.mehl.jd.logic.entity.logic.no.mehl.jd.logic have such component defined
 				if(cr1 != null && !cr1.isHandled() && cr2 != null && !cr2.isHandled()) {
 					cr1.collidesWith(e2);
 					cr2.collidesWith(e1);

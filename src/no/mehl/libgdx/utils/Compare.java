@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 /** 
  * All snapshot shares an identificator. Id defines what type of component this snapshot is.
  * A snapshot will not get serialized and passed on the network unless it has been changed.
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public class Compare {
 	

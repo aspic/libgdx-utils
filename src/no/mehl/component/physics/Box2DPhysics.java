@@ -20,7 +20,7 @@ import no.mehl.libgdx.utils.Dimension;
 
 /**
  * This component definition is tightly coupled to the {@link Body} class in Box2D.
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public class Box2DPhysics extends Physics {
 	
@@ -139,7 +139,7 @@ public class Box2DPhysics extends Physics {
 		super.setDimension(dim);
 			
 		if(this.body != null) {
-			for (int i = 0; i < body.getFixtureList().size(); i++) {
+			for (int i = 0; i < body.getFixtureList().size; i++) {
 				body.destroyFixture(body.getFixtureList().get(i));
 			}
 			updateFixture();
@@ -231,7 +231,7 @@ public class Box2DPhysics extends Physics {
 				filter = (Filter) data.get(UserData.D_FILTER);
 			}
 			
-			for (int i = 0; i < body.getFixtureList().size(); i++) {
+			for (int i = 0; i < body.getFixtureList().size; i++) {
 				body.getFixtureList().get(i).setUserData(object);
 				if(filter != null) body.getFixtureList().get(i).setFilterData(filter);
 			}
@@ -249,7 +249,7 @@ public class Box2DPhysics extends Physics {
 		this.data.put(UserData.D_FILTER, filter);
 		
 		if(this.body != null) {
-			for (int i = 0; i < body.getFixtureList().size(); i++) {
+			for (int i = 0; i < body.getFixtureList().size; i++) {
 				body.getFixtureList().get(i).setFilterData(filter);
 			}
 		}
@@ -266,7 +266,7 @@ public class Box2DPhysics extends Physics {
 	
 	public void setSensor(boolean b) {
 		if(this.body != null) {
-			for (int i = 0; i < body.getFixtureList().size(); i++) {
+			for (int i = 0; i < body.getFixtureList().size; i++) {
 				body.getFixtureList().get(i).setSensor(b);
 			}
 		}

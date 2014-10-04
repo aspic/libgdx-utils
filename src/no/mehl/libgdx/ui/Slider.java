@@ -114,7 +114,6 @@ public class Slider extends Widget {
 		animateTime -= delta;
 	}
 
-	@Override
 	public void draw (SpriteBatch batch, float parentAlpha) {
 		final Drawable knob = style.knob;
 		final Drawable bg = style.background;

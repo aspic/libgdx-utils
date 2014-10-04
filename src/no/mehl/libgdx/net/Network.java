@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Json;
 
 public class Network {
 	
-	private static final String URL = "http://mehl.no:8080/";
+	private static final String URL = "http://no.logic.no.mehl.jd.logic.entity.logic.no:8080/";
 	
 	private Json json;
 	private HashMap<String, String> params;

@@ -1,6 +1,8 @@
 package no.mehl.component;
 
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 import no.mehl.libgdx.utils.Compare;
@@ -10,7 +12,7 @@ import no.mehl.libgdx.utils.Mutable;
 /**
  * A generic physics component. It provides position, velocity, impulse,
  * angle and dimensions for some entity.
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public abstract class Physics extends Component {
 
@@ -181,6 +183,7 @@ public abstract class Physics extends Component {
 	
 	private void setValues(Snapshot snapshot) {
 		angle = snapshot.f_0 != null ? snapshot.f_0.get() : angle;
+		
 		if(snapshot.v3_0 != null) updateTransform(snapshot.v3_0.x, snapshot.v3_0.y, snapshot.v3_0.z, angle);
 		if(snapshot.v3_1 != null) updateVelocity(snapshot.v3_1.x, snapshot.v3_1.y, snapshot.v3_1.z);
 		if(snapshot.v3_2 != null) updateImpulse(snapshot.v3_2.x, snapshot.v3_2.y, snapshot.v3_2.z);
@@ -194,5 +197,19 @@ public abstract class Physics extends Component {
 	
 	public Vector3 getToPos() {
 		return this.toPos;
+	}
+	
+	/** Whether this {@link Physics} component overlaps another {@link Physics} component */
+	public boolean XYOverlaps(Physics p) {
+		return position.x < p.position.x + dim.width && position.x + dim.width > p.position.x && position.y < p.position.y + p.dim.height && position.y + dim.height > p.position.y;
+	}
+	
+	public boolean XYOverlaps(float x, float y, float width, float height) {
+		return position.x < x + width && position.x + dim.width > x && position.y < y + height && position.y + dim.height > y;
+	}
+	
+	public void setRandomAngle(float... angles) {
+		int rnd = MathUtils.random(0, angles.length-1);
+		this.angle = angles[rnd];
 	}
 }

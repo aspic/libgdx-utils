@@ -5,7 +5,7 @@ import no.mehl.component.GameEntity;
 
 /**
  * A response describing standard behaviour.
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public class StandardContact extends Contact {
 

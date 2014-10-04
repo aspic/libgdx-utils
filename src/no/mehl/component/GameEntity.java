@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * A generic class defined by its components.
- * @author Kjetil Mehl <kjetil@mehl.no>
+ * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
  */
 public class GameEntity {
 	
@@ -28,7 +28,7 @@ public class GameEntity {
 	private String owner;
 	
 
-	/** Creates an empty {@link GameObject}. */
+	/** Creates an empty {@link GameEntity}. */
 	public GameEntity() {
 	}
 	
@@ -157,7 +157,7 @@ public class GameEntity {
 	/** 
 	 * A condensed version of a {@link GameEntity}. Will be serialised and transmitted
 	 * over the network.
-	 * @author Kjetil Mehl <kjetil@mehl.no>
+	 * @author Kjetil Mehl <kjetil@no.logic.no.mehl.jd.logic.entity.logic.no>
 	 */
 	public static class EntitySnapshot {
 		public int id;
@@ -324,7 +324,9 @@ public class GameEntity {
 		else components.clear();
 		
 		for(Snapshot s : snapshot.cps) {
-			components.add((Component)Component.getComponent(s.id).fill(s));
+            Component c = Component.getComponent(s.id).fill(s);
+            System.out.println("Created: " + c);
+            components.add(c);
 		}
 	}
 	public boolean owns(Class<?> class1) {

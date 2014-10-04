@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.materials.Material;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
@@ -125,7 +125,7 @@ public class ModelRenderer extends Renderer {
 		instance.transform.scale(physics.getDimension().width, physics.getDimension().height, physics.getDimension().depth);
 		
 		modelBatch.begin(camera);
-		modelBatch.render(instance, ShaderManager.getInstance().getLights());
+		modelBatch.render(instance);
 		modelBatch.end();
 		
 		instance.transform.set(modelMat);
